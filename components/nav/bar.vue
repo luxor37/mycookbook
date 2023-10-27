@@ -6,23 +6,23 @@ const navigation = [
   },
   {
     title: "Entrées",
-    link: "/?type=ENTREES",
+    link: "/entrees",
   },
   {
     title: "Repas",
-    link: "/?type=REPAS",
+    link: "/repas",
   },
   {
     title: "Désserts",
-    link: "/?type=DESSERTS",
+    link: "/desserts",
   },
   {
     title: "Boissons",
-    link: "/?type=BOISSONS",
+    link: "/boissons",
   },
   {
     title: "Autres",
-    link: "/?type=AUTRES",
+    link: "/autres",
   },
 ];
 </script>

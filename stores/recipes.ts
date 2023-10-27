@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import Recipe from "~/types/recipe"
+import Recipe, { CATEGORY } from "~/types/recipe"
 
 export const useRecipeStore = defineStore("recipe", {
     state: () => ({
@@ -7,7 +7,7 @@ export const useRecipeStore = defineStore("recipe", {
     }),
     getters: {
         getRecipesByType: (state) => {
-            return (type: "REPAS" | "ENTREES" | "DESSERTS" | "BOISSONS" | "AUTRES") => {
+            return (type: CATEGORY) => {
                 if (state.recipes === null) return [] as Recipe[]
                 return state.recipes.filter(recipe => recipe.type === type)
             }
@@ -16,9 +16,10 @@ export const useRecipeStore = defineStore("recipe", {
     actions: {
         async parseRecipes() {
             try {
+                console.warn("Parsing recipes...")
                 const response = await fetch('/recipes.json');
                 if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
+                    throw console.error('Failed to fetch recipes.json', response);
                 }
                 const parsedRecipes: { recipes: Recipe[] } = await response.json();
                 this.recipes = parsedRecipes.recipes
