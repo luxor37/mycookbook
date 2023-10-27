@@ -1,14 +1,36 @@
 <script setup lang="ts">
 import { useRecipeStore } from "~/stores/recipes";
-const recipeStore = useRecipeStore();
 
-const { recipes } = recipeStore;
 const route = useRoute();
 
+watch(
+  () => route.params.type,
+  (newValue) => {
+    type.value = newValue;
+  }
+);
+
+const routeType = ref(route.params.type);
+
+const type = route.params.type as
+  | "REPAS"
+  | "ENTREES"
+  | "DESSERTS"
+  | "BOISSONS"
+  | "AUTRES";
+
 const filteredRecipes = computed(() => {
+  const recipeStore = useRecipeStore();
+  const { recipes } = recipeStore;
   if (recipes !== null) {
-    if (route.params.type) {
-      return recipeStore.getRecipesByType("REPAS");
+    if (routeType) {
+      const type = routeType as
+        | "REPAS"
+        | "ENTREES"
+        | "DESSERTS"
+        | "BOISSONS"
+        | "AUTRES";
+      return recipeStore.getRecipesByType(type);
     }
     console.log("All recipes");
     return recipes;
@@ -19,7 +41,9 @@ const filteredRecipes = computed(() => {
 </script>
 
 <template>
-  <div :key="recipe.title" v-for="recipe in filteredRecipes">
-    {{ recipe.title }}
+  <div v-if="filteredRecipes.length > 0">
+    <div :key="recipe.title" v-for="recipe in filteredRecipes">
+      {{ recipe.title }}
+    </div>
   </div>
 </template>

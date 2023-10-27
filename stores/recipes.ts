@@ -21,7 +21,6 @@ export const useRecipeStore = defineStore("recipe", {
                     throw new Error('Network response was not ok ' + response.statusText);
                 }
                 const parsedRecipes: { recipes: Recipe[] } = await response.json();
-                console.log(parsedRecipes.recipes)
                 this.recipes = parsedRecipes.recipes
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);
