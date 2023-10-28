@@ -1,5 +1,6 @@
 export default interface Recipe {
-    type: "REPAS" | "ENTREES" | "DESSERTS" | "BOISSONS" | "AUTRES"
+    id: string
+    type: CATEGORY
     title: string
     portions: string
     time: string
@@ -15,3 +16,11 @@ interface Ingredient {
     quantity: string
     unit: string
 }
+
+export type CATEGORY =
+    | "REPAS"
+    | "ENTREES"
+    | "DESSERTS"
+    | "BOISSONS"
+    | "AUTRES"
+    | "ALL";

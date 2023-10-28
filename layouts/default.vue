@@ -15,7 +15,7 @@ if (recipeStore.recipes === null) {
 
 <template>
   <NavBar />
-  <div class="mt-24">
+  <div class="mt-24 justify-center flex flex-col">
     <slot />
   </div>
 </template>
