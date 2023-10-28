@@ -1,6 +1,7 @@
 {
     "recipes": [
         {
+            "id": "pate_au_thon",
             "type": "REPAS",
             "title": "Pâté au thon",
             "portions": "8",

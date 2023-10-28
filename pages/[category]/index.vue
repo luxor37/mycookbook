@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
+import { useRecipeStore } from "~/stores/recipes";
+import Recipe, { CATEGORY } from "~/types/recipe";
 
 const route = useRoute();
+const router = useRouter();
 const routeType = ref<CATEGORY>("ALL");
+const recipeStore = useRecipeStore();
 
 watch(
   route,
@@ -30,28 +34,49 @@ watch(
   { deep: true, immediate: true }
 );
 
-import { useRecipeStore } from "~/stores/recipes";
-import { CATEGORY } from "~/types/recipe";
-
-const filteredRecipes = computed(() => {
-  const recipeStore = useRecipeStore();
-  const { recipes } = recipeStore;
-  if (recipes !== null) {
-    if (routeType) {
-      return recipeStore.getRecipesByType(routeType.value);
-    }
-    console.log("All recipes");
-    return recipes;
+const filteredRecipes = computed((): Recipe[] => {
+  if (recipeStore.recipes === null) return [];
+  if (routeType) {
+    return recipeStore.getRecipesByType(routeType.value);
   }
-  console.log("No Recipes");
-  return [];
+  return recipeStore.recipes;
 });
 </script>
 
 <template>
-  <div :key="routeType" v-if="filteredRecipes.length > 0">
-    <div :key="recipe.title" v-for="recipe in filteredRecipes">
-      {{ recipe.title }}
+  <div
+    :key="routeType"
+    class="flex flex-wrap justify-center"
+    v-if="recipeStore.recipes !== null && filteredRecipes.length > 0"
+  >
+    <div
+      @click="router.push(`/recette?id=${id}`)"
+      v-for="{
+        id,
+        title,
+        portions,
+        time,
+        tags,
+        ingredients,
+        preparation,
+        image,
+        source,
+      } in filteredRecipes"
+      :key="id"
+      class="w-1/2 max-w-xs cursor-pointer"
+    >
+      <div class="aspect-ratio">
+        <div
+          class="aspect-content mt-4 rounded-lg bg-slate-500 bg-zoom"
+          :style="`background-image: url(${image});`"
+        >
+          <div class="h-full w-full bg-gradient rounded-lg">
+            <div class="text-white bottom-0 absolute w-full p-2">
+              {{ title }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +84,7 @@ const filteredRecipes = computed(() => {
 <style scoped>
 .aspect-ratio {
   width: 100%; /* or any width you desire */
-  padding-top: 50%; /* 2:1 Aspect Ratio */
+  padding-top: 100%; /* 1:1 Aspect Ratio */
   position: relative; /* If you want text inside of the container */
 }
 

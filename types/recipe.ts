@@ -1,4 +1,5 @@
 export default interface Recipe {
+    id: string
     type: CATEGORY
     title: string
     portions: string
