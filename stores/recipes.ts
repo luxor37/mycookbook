@@ -9,7 +9,10 @@ export const useRecipeStore = defineStore("recipe", {
         getRecipesByType: (state) => {
             return (type: CATEGORY) => {
                 if (state.recipes === null) return [] as Recipe[]
-                return state.recipes.filter(recipe => recipe.type === type)
+                if (type === "ALL") return state.recipes.sort((a, b) => (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0)
+                const filtered = state.recipes.filter(recipe => recipe.type === type).sort((a, b) => (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0)
+                console.log("Filtered recipes:", filtered)
+                return filtered
             }
         }
     },
@@ -23,6 +26,7 @@ export const useRecipeStore = defineStore("recipe", {
                 }
                 const parsedRecipes: { recipes: Recipe[] } = await response.json();
                 this.recipes = parsedRecipes.recipes
+                console.log("Parsed recipes:", this.recipes)
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);
             }

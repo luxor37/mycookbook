@@ -12,7 +12,7 @@ watch(
   route,
   (to) => {
     switch (to.params.category) {
-      case "entree":
+      case "entrees":
         routeType.value = "ENTREES";
         break;
       case "repas":
@@ -35,6 +35,8 @@ watch(
 );
 
 const filteredRecipes = computed((): Recipe[] => {
+  console.log(recipeStore.recipes);
+  console.log(routeType.value);
   if (recipeStore.recipes === null) return [];
   if (routeType) {
     return recipeStore.getRecipesByType(routeType.value);
@@ -46,24 +48,14 @@ const filteredRecipes = computed((): Recipe[] => {
 <template>
   <div
     :key="routeType"
-    class="flex flex-wrap justify-center"
+    class="flex flex-wrap m-2 md:mx-52"
     v-if="recipeStore.recipes !== null && filteredRecipes.length > 0"
   >
     <div
       @click="router.push(`/recette?id=${id}`)"
-      v-for="{
-        id,
-        title,
-        portions,
-        time,
-        tags,
-        ingredients,
-        preparation,
-        image,
-        source,
-      } in filteredRecipes"
+      v-for="{ id, title, image } in filteredRecipes"
       :key="id"
-      class="w-1/2 max-w-xs cursor-pointer"
+      class="w-1/2 max-w-xs cursor-pointer p-2"
     >
       <div class="aspect-ratio">
         <div
