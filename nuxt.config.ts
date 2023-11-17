@@ -96,6 +96,22 @@ export default defineNuxtConfig({
           type: "image/png",
         },
       ],
+      screenshots: [
+        {
+          src: "/screenshots/mobile-screenshot.png",
+          sizes: "",
+          type: "image/png",
+          label: "Home Screen on Mobile",
+          platform: "mobile"
+        },
+        {
+          src: "/screenshots/desktop-screenshot.png",
+          sizes: "",
+          type: "image/png",
+          label: "Home Screen on Desktop",
+          platform: "web"
+        }
+      ],
       start_url: "/",
       display: "fullscreen",
     },
