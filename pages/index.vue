@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+definePageMeta({
+  colorMode: "light",
+});
 import { useRecipeStore } from "~/stores/recipes";
 import Recipe, { CATEGORY } from "~/types/recipe";
 
@@ -8,8 +10,6 @@ const routeType = ref<CATEGORY>("ALL");
 const recipeStore = useRecipeStore();
 
 const filteredRecipes = computed((): Recipe[] => {
-  console.log(recipeStore.recipes);
-  console.log(routeType.value);
   if (recipeStore.recipes === null) return [];
   if (routeType) {
     return recipeStore.getRecipesByType(routeType.value);
