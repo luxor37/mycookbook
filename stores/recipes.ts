@@ -9,7 +9,7 @@ export const useRecipeStore = defineStore("recipe", {
         getRecipesByType: (state) => {
             return (type: CATEGORY): Recipe[] => {
                 if (state.recipes === null) return [] as Recipe[]
-                if (type === "ALL") return state.recipes.sort((a, b) => (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0)
+                if (type === CATEGORY.ALL) return state.recipes.sort((a, b) => (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0)
                 const filtered = state.recipes.filter(recipe => recipe.type === type).sort((a, b) => (a.title < b.title) ? -1 : (a.title > b.title) ? 1 : 0)
                 return filtered
             }

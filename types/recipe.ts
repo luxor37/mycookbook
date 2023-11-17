@@ -11,16 +11,17 @@ export default interface Recipe {
     source?: string
 }
 
-interface Ingredient {
+export interface Ingredient {
     name: string,
     quantity: string
     unit: string
 }
 
-export type CATEGORY =
-    | "REPAS"
-    | "ENTREES"
-    | "DESSERTS"
-    | "BOISSONS"
-    | "AUTRES"
-    | "ALL";
+export enum CATEGORY {
+    REPAS = "REPAS",
+    ENTREES = "ENTREES",
+    DESSERTS = "DESSERTS",
+    BOISSONS = "BOISSONS",
+    AUTRES = "AUTRES",
+    ALL = "ALL"
+}
