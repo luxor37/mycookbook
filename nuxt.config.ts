@@ -99,14 +99,14 @@ export default defineNuxtConfig({
       screenshots: [
         {
           src: "/screenshots/mobile-screenshot.png",
-          sizes: "",
+          sizes: "1125×1951",
           type: "image/png",
           label: "Home Screen on Mobile",
           platform: "mobile"
         },
         {
           src: "/screenshots/desktop-screenshot.png",
-          sizes: "",
+          sizes: "2880×1524",
           type: "image/png",
           label: "Home Screen on Desktop",
           platform: "web"
