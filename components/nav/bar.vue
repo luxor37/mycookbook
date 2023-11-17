@@ -58,8 +58,8 @@ const isCollapsed = ref(true);
         </div>
       </div>
       <div
-        :class="`transition-all ease-in-out overflow-hidden duration-500
-        ${isCollapsed ? 'max-h-0' : 'max-h-96'}`"
+        :class="`flex flex-col md:flex-row transition-all ease-in-out overflow-hidden duration-500
+        ${isCollapsed ? 'max-h-0 md:max-h-96' : 'max-h-96'}`"
       >
         <div
           :key="title"
