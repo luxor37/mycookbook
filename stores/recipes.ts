@@ -24,7 +24,7 @@ export const useRecipeStore = defineStore("recipe", {
     actions: {
         async parseRecipes() {
             try {
-                const response = await fetch('/recipes.json');
+                const response = await fetch('https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json');
                 if (!response.ok) {
                     throw console.error('Failed to fetch recipes.json', response);
                 }
