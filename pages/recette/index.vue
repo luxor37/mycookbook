@@ -28,7 +28,7 @@ watch(
 <template>
   <div v-if="recipe" class="flex flex-col items-center w-full md:w-auto">
     <div class="p-4 md:max-w-7xl">
-      <div class="text-3xl text-primary">
+      <div class="text-3xl text-primary font-extrabold">
         {{ recipe.title }}
       </div>
       <div class="flex flex-row pt-2">

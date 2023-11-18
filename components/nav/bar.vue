@@ -64,7 +64,7 @@ const isCollapsed = ref(true);
         <div
           :key="title"
           v-for="{ title, link, isActive } in navigation"
-          :class="`p-4 text-white opacity-75 font-extrabold uppercase  ${
+          :class="`p-4 text-gray-200 font-extrabold uppercase  ${
             isActive ? 'underline' : ''
           }`"
           @click="isCollapsed = true"

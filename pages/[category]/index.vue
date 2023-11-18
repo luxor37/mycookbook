@@ -8,7 +8,7 @@ import Recipe, { CATEGORY } from "~/types/recipe";
 
 const route = useRoute();
 const router = useRouter();
-const routeType = ref<CATEGORY>("ALL");
+const routeType = ref<CATEGORY>(CATEGORY.ALL);
 const recipeStore = useRecipeStore();
 
 watch(
@@ -16,22 +16,22 @@ watch(
   (to) => {
     switch (to.params.category) {
       case "entrees":
-        routeType.value = "ENTREES";
+        routeType.value = CATEGORY.ENTREES;
         break;
       case "repas":
-        routeType.value = "REPAS";
+        routeType.value = CATEGORY.REPAS;
         break;
       case "desserts":
-        routeType.value = "DESSERTS";
+        routeType.value = CATEGORY.DESSERTS;
         break;
       case "boissons":
-        routeType.value = "BOISSONS";
+        routeType.value = CATEGORY.BOISSONS;
         break;
       case "autres":
-        routeType.value = "AUTRES";
+        routeType.value = CATEGORY.AUTRES;
         break;
       default:
-        routeType.value = "ALL";
+        routeType.value = CATEGORY.ALL;
     }
   },
   { deep: true, immediate: true }
@@ -64,7 +64,9 @@ const filteredRecipes = computed((): Recipe[] => {
           :style="`background-image: url(${image});`"
         >
           <div class="h-full w-full bg-gradient rounded-lg">
-            <div class="text-white bottom-0 absolute w-full p-2">
+            <div
+              class="text-gray-200 bottom-0 absolute w-full p-2 font-extrabold"
+            >
               {{ title }}
             </div>
           </div>
