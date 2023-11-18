@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import Recipe, { CATEGORY } from "~/types/recipe"
 
+
 export const useRecipeStore = defineStore("recipe", {
     state: () => ({
         recipes: null as Recipe[] | null,
@@ -35,4 +36,13 @@ export const useRecipeStore = defineStore("recipe", {
             }
         }
     },
+    persist: {
+        enabled: true,
+        strategies: [
+            {
+                key: 'recipes',
+                storage: localStorage,
+            },
+        ],
+    }
 });

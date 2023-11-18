@@ -49,6 +49,8 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
 
+
+
   modules: [
     "@vite-pwa/nuxt",
     '@pinia/nuxt',
@@ -125,4 +127,8 @@ export default defineNuxtConfig({
       installPrompt: true,
     },
   },
+
+  // plugins: [
+  //   '~/plugins/pinia-plugin-persist.client'
+  // ],
 })
