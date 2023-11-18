@@ -40,7 +40,7 @@ const isCollapsed = ref(true);
 </script>
 
 <template>
-  <div class="absolute top-0 bg-primary w-screen p-4 z-10">
+  <div class="absolute top-0 bg-primary w-full p-4 z-10">
     <div class="flex flex-col items-center md:items-start md:flex-row">
       <div
         class="flex md:hidden p-4 text-white opacity-75 font-extrabold uppercase align-middle"

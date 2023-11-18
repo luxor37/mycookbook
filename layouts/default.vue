@@ -15,7 +15,14 @@ if (recipeStore.recipes === null) {
 
 <template>
   <NavBar />
-  <div class="mt-24 justify-center flex flex-col">
-    <slot />
+  <div class="min-h-screen flex flex-col justify-between">
+    <div class="pt-24 justify-center flex flex-col pb-12">
+      <slot />
+    </div>
+    <div class="text-white bg-primary flex justify-center py-4">
+      <div>
+        © Rémi Martel, {{ new Date().getFullYear() }}. Tous droits réservés.
+      </div>
+    </div>
   </div>
 </template>
