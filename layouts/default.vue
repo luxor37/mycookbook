@@ -21,7 +21,7 @@ if (recipeStore.recipes === null) {
     </div>
     <div class="text-white bg-primary flex justify-center py-4">
       <div>
-        © <a class="underline text-primary" href="https://www.rmartel.dev" target="_blank">Rémi Martel</a>, {{ new Date().getFullYear() }}. Tous droits réservés.
+        © <a class="underline text-white" href="https://www.rmartel.dev" target="_blank">Rémi Martel</a>, {{ new Date().getFullYear() }}. Tous droits réservés.
       </div>
     </div>
   </div>
