@@ -20,6 +20,24 @@ export default defineNuxtConfig({
         { name: "description", content: `${appDescription}` },
         { name: "theme-color", content: "#ffffff" },
         { name: "msapplication-TileColor", content: "#da532c" },
+
+        { name: 'description', content: 'Un simple site de recettes maisons.' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+
+        // Open Graph / Facebook meta tags
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'My Cookbook' },
+        { property: 'og:title', content: 'My Cookbook' },
+        { property: 'og:description', content: 'Un simple site de recettes maisons.' },
+        { property: 'og:image', content: 'https://mycookb00k.netlify.app/icons/android-chrome-512x512.png' },
+        { property: 'og:url', content: 'https://mycookb00k.netlify.app/' },
+
+        // Twitter Card meta tags
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'My Cookbook' },
+        { name: 'twitter:description', content: 'Un simple site de recettes maisons.' },
+        { name: 'twitter:image', content: 'https://mycookb00k.netlify.app/icons/android-chrome-512x512.png' },
+
       ],
       link: [
         {
