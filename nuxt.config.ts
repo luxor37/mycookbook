@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       meta: [
         { name: "description", content: `${appDescription}` },
         { name: "theme-color", content: "#ffffff" },
-        { name: "msapplication-TileColor", content: "#da532c" },
+        { name: "msapplication-TileColor", content: "#22c55e" },
 
         { name: 'description', content: 'Un simple site de recettes maisons.' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
