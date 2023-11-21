@@ -21,7 +21,29 @@ if (recipeStore.recipes === null) {
     </div>
     <div class="text-white bg-primary flex justify-center py-4">
       <div>
-        © <a class="underline text-white" href="https://www.rmartel.dev" target="_blank">Rémi Martel</a>, {{ new Date().getFullYear() }}. Tous droits réservés.
+        ©
+        <a
+          class="underline text-white"
+          href="https://www.rmartel.dev"
+          target="_blank"
+          >Rémi Martel</a
+        >, {{ new Date().getFullYear() }}. Tous droits réservés.
+      </div>
+      <div>
+        <a
+          class="underline text-white"
+          href="https://github.com/luxor37/mycookbook"
+          target="_blank"
+          >Projet Github</a
+        >
+      </div>
+      <div>
+        <a
+          class="underline text-white"
+          href="https://github.com/luxor37/mycookbook_lib"
+          target="_blank"
+          >Librairies de recettes et d'images</a
+        >
       </div>
     </div>
   </div>
