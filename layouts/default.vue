@@ -19,7 +19,7 @@ if (recipeStore.recipes === null) {
     <div class="pt-24 justify-center flex flex-col pb-12">
       <slot />
     </div>
-    <div class="text-white bg-primary flex justify-center py-4">
+    <div class="text-white bg-primary flex flex-col justify-center py-4">
       <div>
         ©
         <a
