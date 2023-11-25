@@ -31,15 +31,15 @@ watch(
       <div class="text-3xl text-primary font-extrabold">
         {{ recipe.title }}
       </div>
-      <div class="flex flex-row pt-2">
+      <div class="flex flex-row pt-2 flex-wrap gap-2">
         <Tag>{{ recipe.portions }}</Tag>
-        <Tag class="ml-2">
+        <Tag>
           <Clock /><span class="ml-1">{{ recipe.time }}</span>
         </Tag>
         <Tag
           v-for="(tag, i) in recipe.tags"
           :key="`${tag}-${i}`"
-          class="bg-primary text-white ml-2"
+          class="bg-primary text-white"
         >
           {{ tag }}
         </Tag>
