@@ -36,13 +36,4 @@ export const useRecipeStore = defineStore("recipe", {
             }
         }
     },
-    persist: {
-        enabled: true,
-        strategies: [
-            {
-                key: 'recipes',
-                storage: localStorage,
-            },
-        ],
-    }
 });
