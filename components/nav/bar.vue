@@ -1,39 +1,20 @@
 <script setup lang="ts">
+const NAV_ITEMS = [
+  { title: "Toutes les recettes", link: "/" },
+  { title: "Entrées", link: "/entrees" },
+  { title: "Repas", link: "/repas" },
+  { title: "Désserts", link: "/desserts" },
+  { title: "Boissons", link: "/boissons" },
+  { title: "Autres", link: "/autres" },
+] as const;
+
 const route = useRoute();
 const navigation = computed(() => {
   const currentPath = route.path;
-  return [
-    {
-      title: "Toutes les recettes",
-      link: "/",
-      isActive: currentPath === "/",
-    },
-    {
-      title: "Entrées",
-      link: "/entrees",
-      isActive: currentPath === "/entrees",
-    },
-    {
-      title: "Repas",
-      link: "/repas",
-      isActive: currentPath === "/repas",
-    },
-    {
-      title: "Désserts",
-      link: "/desserts",
-      isActive: currentPath === "/desserts",
-    },
-    {
-      title: "Boissons",
-      link: "/boissons",
-      isActive: currentPath === "/boissons",
-    },
-    {
-      title: "Autres",
-      link: "/autres",
-      isActive: currentPath === "/autres",
-    },
-  ];
+  return NAV_ITEMS.map((item) => ({
+    ...item,
+    isActive: currentPath === item.link,
+  }));
 });
 
 const isCollapsed = ref(true);
@@ -58,15 +39,18 @@ const isCollapsed = ref(true);
         </div>
       </div>
       <div
-        :class="`flex flex-col md:flex-row transition-all ease-in-out overflow-hidden duration-500
-        ${isCollapsed ? 'max-h-0 md:max-h-96' : 'max-h-96'}`"
+        :class="[
+          'flex flex-col md:flex-row transition-all ease-in-out overflow-hidden duration-500',
+          isCollapsed ? 'max-h-0 md:max-h-96' : 'max-h-96',
+        ]"
       >
         <div
-          :key="title"
           v-for="{ title, link, isActive } in navigation"
-          :class="`p-4 text-gray-200 font-extrabold uppercase  ${
-            isActive ? 'underline' : ''
-          }`"
+          :key="link"
+          :class="[
+            'p-4 text-gray-200 font-extrabold uppercase',
+            { underline: isActive },
+          ]"
           @click="isCollapsed = true"
         >
           <NuxtLink :to="link"> {{ title }}</NuxtLink>

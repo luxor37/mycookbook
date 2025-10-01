@@ -9,11 +9,12 @@ import { CATEGORY, type Recipe } from "~/types/recipe";
 const route = useRoute();
 const routeType = ref<CATEGORY>(CATEGORY.ALL);
 const recipeStore = useRecipeStore();
+const routeCategory = computed(() => route.params.category);
 
 watch(
-  route,
-  (to) => {
-    switch (to.params.category) {
+  routeCategory,
+  (categoryParam) => {
+    switch (categoryParam) {
       case "entrees":
         routeType.value = CATEGORY.ENTREES;
         break;
@@ -33,7 +34,7 @@ watch(
         routeType.value = CATEGORY.ALL;
     }
   },
-  { deep: true, immediate: true }
+  { immediate: true }
 );
 
 const filteredRecipes = computed((): Recipe[] => {

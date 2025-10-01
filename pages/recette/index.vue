@@ -9,19 +9,23 @@ import type { Recipe } from "~/types/recipe";
 const recipeStore = useRecipeStore();
 const recipe = ref<Recipe | undefined>(undefined);
 const route = useRoute();
+const recipeId = computed(() => route.query.id?.toString());
 
 watch(
-  () => route.query.id,
-  async (newId, oldId) => {
-    if (newId) {
-      if (recipeStore.recipes === null) {
-        await recipeStore.parseRecipes();
-      }
-      const r = recipeStore.getRecipeById(newId?.toString());
-      recipe.value = r;
+  recipeId,
+  async (newId) => {
+    if (!newId) {
+      recipe.value = undefined;
+      return;
     }
+
+    if (recipeStore.recipes === null) {
+      await recipeStore.parseRecipes();
+    }
+
+    recipe.value = recipeStore.getRecipeById(newId);
   },
-  { deep: true, immediate: true }
+  { immediate: true }
 );
 </script>
 
@@ -34,7 +38,7 @@ watch(
       <div class="flex flex-row pt-2 flex-wrap gap-2">
         <Tag>{{ recipe.portions }}</Tag>
         <Tag>
-          <IconClock /><span class="ml-1">{{ recipe.time }}</span>
+          <Clock /><span class="ml-1">{{ recipe.time }}</span>
         </Tag>
         <Tag
           v-for="(tag, i) in recipe.tags"
