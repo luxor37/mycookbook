@@ -60,10 +60,12 @@ const isCollapsed = ref(true);
             <NuxtLink :to="link"> {{ title }}</NuxtLink>
           </div>
         </div>
-        <div class="flex justify-center md:justify-start px-4 md:px-0 pb-4 md:pb-0">
+        <div
+          class="flex justify-center md:justify-start px-4 md:px-0 pb-4 md:pb-0"
+        >
           <UButton
             icon="i-heroicons-plus"
-            color="white"
+            color="neutral"
             variant="solid"
             size="sm"
             :to="RECIPE_FORM_URL"

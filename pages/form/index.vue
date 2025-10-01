@@ -18,9 +18,7 @@ const imagePath = computed(() => {
   return undefined;
 });
 
-const ingredients = ref<Ingredient[]>([
-  { name: "", quantity: "", unit: "" },
-]);
+const ingredients = ref<Ingredient[]>([{ name: "", quantity: "", unit: "" }]);
 const tags = ref<string>("");
 const instructions = ref<string>("");
 const prep = computed(() => {
@@ -74,15 +72,18 @@ const output = computed(() => {
 });
 
 const submitting = ref(false);
-const submitState = ref<'idle' | 'success' | 'error'>('idle');
-const submitMessage = ref('');
+const submitState = ref<"idle" | "success" | "error">("idle");
+const submitMessage = ref("");
 
 const clearStatus = () => {
-  submitState.value = 'idle';
-  submitMessage.value = '';
+  submitState.value = "idle";
+  submitMessage.value = "";
 };
 
-watch([id, title, portions, time, type, image, tags, instructions, source, notes], clearStatus);
+watch(
+  [id, title, portions, time, type, image, tags, instructions, source, notes],
+  clearStatus
+);
 
 const submitRecipe = async () => {
   if (submitting.value) return;
@@ -92,28 +93,30 @@ const submitRecipe = async () => {
   const cleanedInstructions = prep.value;
   const cleanedTags = taglist.value;
 
-  if (!id.value?.trim()) missing.push('Identifiant');
-  if (!title.value?.trim()) missing.push('Titre');
-  if (!type.value) missing.push('Catégorie');
-  if (!portions.value?.trim()) missing.push('Portions');
-  if (!time.value?.trim()) missing.push('Temps');
+  if (!id.value?.trim()) missing.push("Identifiant");
+  if (!title.value?.trim()) missing.push("Titre");
+  if (!type.value) missing.push("Catégorie");
+  if (!portions.value?.trim()) missing.push("Portions");
+  if (!time.value?.trim()) missing.push("Temps");
   if (!image.value?.trim()) missing.push("Nom de l'image");
-  if (!cleanedIngredients.length) missing.push('Ingrédients');
-  if (!cleanedInstructions.length) missing.push('Préparation');
+  if (!cleanedIngredients.length) missing.push("Ingrédients");
+  if (!cleanedInstructions.length) missing.push("Préparation");
 
   if (missing.length > 0) {
-    submitState.value = 'error';
-    submitMessage.value = `Veuillez compléter les champs suivants : ${missing.join(', ')}`;
+    submitState.value = "error";
+    submitMessage.value = `Veuillez compléter les champs suivants : ${missing.join(
+      ", "
+    )}`;
     return;
   }
 
   submitting.value = true;
-  submitState.value = 'idle';
-  submitMessage.value = '';
+  submitState.value = "idle";
+  submitMessage.value = "";
 
   try {
-    await $fetch('/.netlify/functions/submit-recipe', {
-      method: 'POST',
+    await $fetch("/.netlify/functions/submit-recipe", {
+      method: "POST",
       body: {
         id: id.value?.trim(),
         title: title.value?.trim(),
@@ -129,13 +132,15 @@ const submitRecipe = async () => {
       },
     });
 
-    submitState.value = 'success';
+    submitState.value = "success";
     submitMessage.value =
       "Merci! Votre suggestion a été soumise et sera examinée avant d'être ajoutée.";
   } catch (error: any) {
-    submitState.value = 'error';
+    submitState.value = "error";
     submitMessage.value =
-      error?.data?.message || error?.message || "Une erreur est survenue lors de l'envoi.";
+      error?.data?.message ||
+      error?.message ||
+      "Une erreur est survenue lors de l'envoi.";
   } finally {
     submitting.value = false;
   }
@@ -146,10 +151,11 @@ const submitRecipe = async () => {
   <div class="flex flex-col justify-center">
     <div class="flex justify-center">
       <p class="text-center max-w-3xl">
-        Ce formulaire vous permet de proposer une nouvelle recette pour MyCookbook. Une fois
-        envoyé, votre suggestion créera automatiquement une demande d'ajout afin qu'elle puisse
-        être revue avant d'être intégrée dans la librairie publique. Merci de fournir une image
-        (500x500), des instructions détaillées et toutes les informations utiles!
+        Ce formulaire vous permet de proposer une nouvelle recette pour
+        MyCookbook. Une fois envoyé, votre suggestion créera automatiquement une
+        demande d'ajout afin qu'elle puisse être revue avant d'être intégrée
+        dans la librairie publique. Merci de fournir une image (500x500), des
+        instructions détaillées et toutes les informations utiles!
       </p>
     </div>
     <div class="flex flex-row justify-center">
@@ -222,7 +228,12 @@ const submitRecipe = async () => {
           </div>
           <div>
             Source (optionnel):
-            <input class="border" type="text" v-model="source" placeholder="https://..." />
+            <input
+              class="border"
+              type="text"
+              v-model="source"
+              placeholder="https://..."
+            />
           </div>
           <div>
             Notes (optionnel):
@@ -241,7 +252,7 @@ const submitRecipe = async () => {
           <div class="mt-4 space-y-2">
             <UAlert
               v-if="submitState === 'success'"
-              color="green"
+              color="success"
               variant="soft"
               title="Suggestion envoyée"
             >
@@ -249,7 +260,7 @@ const submitRecipe = async () => {
             </UAlert>
             <UAlert
               v-else-if="submitState === 'error'"
-              color="red"
+              color="error"
               variant="soft"
               title="Erreur"
             >
