@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 import { useRoute } from "vue-router";
-import Recipe from "~/types/recipe";
+import type { Recipe } from "~/types/recipe";
 
 const recipeStore = useRecipeStore();
 const recipe = ref<Recipe | undefined>(undefined);
@@ -34,7 +34,7 @@ watch(
       <div class="flex flex-row pt-2 flex-wrap gap-2">
         <Tag>{{ recipe.portions }}</Tag>
         <Tag>
-          <Clock /><span class="ml-1">{{ recipe.time }}</span>
+          <IconClock /><span class="ml-1">{{ recipe.time }}</span>
         </Tag>
         <Tag
           v-for="(tag, i) in recipe.tags"

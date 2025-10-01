@@ -5,7 +5,7 @@ interface Props {
   image: string;
 }
 
-const { id, title, image } = withDefaults(defineProps<Props>(), {});
+const { id, title, image } = defineProps<Props>();
 
 const router = useRouter();
 </script>

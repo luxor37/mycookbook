@@ -4,7 +4,7 @@ definePageMeta({
 });
 import { useRoute } from "vue-router";
 import { useRecipeStore } from "~/stores/recipes";
-import Recipe, { CATEGORY } from "~/types/recipe";
+import { CATEGORY, type Recipe } from "~/types/recipe";
 
 const route = useRoute();
 const routeType = ref<CATEGORY>(CATEGORY.ALL);

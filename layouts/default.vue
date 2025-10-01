@@ -3,14 +3,12 @@ import { useRecipeStore } from "~/stores/recipes";
 
 const recipeStore = useRecipeStore();
 
-onMounted(() => {
-  if (recipeStore.recipes === null) {
-    recipeStore.parseRecipes();
-  }
-});
-if (recipeStore.recipes === null) {
-  recipeStore.parseRecipes();
-}
+const ensureRecipes = async () => {
+  await recipeStore.parseRecipes();
+};
+
+onServerPrefetch(ensureRecipes);
+onMounted(ensureRecipes);
 </script>
 
 <template>

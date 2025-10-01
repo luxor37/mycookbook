@@ -1,4 +1,4 @@
-export default interface Recipe {
+export interface Recipe {
     id: string
     type: CATEGORY
     title: string

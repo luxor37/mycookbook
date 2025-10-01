@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CATEGORY, Ingredient } from "~/types/recipe";
+import { CATEGORY, type Ingredient } from "~/types/recipe";
 
 definePageMeta({
   colorMode: "light",

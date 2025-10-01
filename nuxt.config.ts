@@ -2,8 +2,8 @@
 import { isDevelopment } from "std-env";
 
 const appTitle = "MyCookbook"
-
-const appDescription = "MyCookbook"
+const appDescription = "Un simple site de recettes maisons."
+const logoURL = "https://mycookb00k.netlify.app/icons/android-chrome-512x512.png"
 
 export default defineNuxtConfig({
   ssr: false,
@@ -21,22 +21,22 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#ffffff" },
         { name: "msapplication-TileColor", content: "#22c55e" },
 
-        { name: 'description', content: 'Un simple site de recettes maisons.' },
+        { name: 'description', content: `${appDescription}` },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
 
         // Open Graph / Facebook meta tags
         { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: 'My Cookbook' },
-        { property: 'og:title', content: 'My Cookbook' },
-        { property: 'og:description', content: 'Un simple site de recettes maisons.' },
-        { property: 'og:image', content: 'https://mycookb00k.netlify.app/icons/android-chrome-512x512.png' },
+        { property: 'og:site_name', content: `${appTitle}` },
+        { property: 'og:title', content: `${appTitle}` },
+        { property: 'og:description', content: `${appDescription}` },
+        { property: 'og:image', content: `${logoURL}` },
         { property: 'og:url', content: 'https://mycookb00k.netlify.app/' },
 
         // Twitter Card meta tags
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'My Cookbook' },
-        { name: 'twitter:description', content: 'Un simple site de recettes maisons.' },
-        { name: 'twitter:image', content: 'https://mycookb00k.netlify.app/icons/android-chrome-512x512.png' },
+        { name: 'twitter:title', content: `${appTitle}` },
+        { name: 'twitter:description', content: `${appDescription}` },
+        { name: 'twitter:image', content: `${logoURL}` },
 
       ],
       link: [
@@ -70,28 +70,16 @@ export default defineNuxtConfig({
 
 
   modules: [
-    "@vite-pwa/nuxt",
+    '@nuxt/ui',
     '@pinia/nuxt',
-    '@nuxt/ui'
+    '@vite-pwa/nuxt'
   ],
 
   colorMode: {
     preference: 'light'
   },
 
-  ui: {
-    global: true,
-  },
-
   css: ['~/assets/css/main.css'],
-  postcss: {
-    plugins: {
-      'postcss-import': {},
-      'tailwindcss/nesting': {},
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
 
   pwa: {
     mode: isDevelopment ? "development" : "production",
@@ -146,7 +134,5 @@ export default defineNuxtConfig({
     },
   },
 
-  // plugins: [
-  //   '~/plugins/pinia-plugin-persist.client'
-  // ],
+  compatibilityDate: '2025-10-01'
 })
