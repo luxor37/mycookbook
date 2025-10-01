@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation du projet MyCookbook
+    url: https://mycookb00k.netlify.app/
+    about: Consultez le site pour voir les recettes et les instructions d'utilisation.

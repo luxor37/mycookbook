@@ -1,0 +1,115 @@
+name: "Recipe suggestion"
+description: "Suggest a new recipe for MyCookbook and supply the data needed for recipes.json."
+title: "[Recipe] <title here>"
+labels:
+  - recipe-suggestion
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci pour votre contribution! Remplissez les champs ci-dessous en vous basant sur le formulaire `/form` du site. 
+        Fournissez autant de détails que possible afin de faciliter l'ajout dans `recipes.json`.
+  - type: input
+    id: recipe_id
+    attributes:
+      label: Identifiant unique
+      description: |
+        Chaîne en minuscules utilisée comme clé dans `recipes.json` (ex. `soupe-oignon`).
+      placeholder: "soupe-oignon"
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Titre de la recette
+      placeholder: "Soupe à l'oignon"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Catégorie
+      options:
+        - REPAS
+        - ENTREES
+        - DESSERTS
+        - BOISSONS
+        - AUTRES
+    validations:
+      required: true
+  - type: input
+    id: portions
+    attributes:
+      label: Portions
+      placeholder: "4 portions"
+    validations:
+      required: true
+  - type: input
+    id: time
+    attributes:
+      label: Temps de préparation / cuisson
+      placeholder: "45 minutes"
+    validations:
+      required: true
+  - type: textarea
+    id: tags
+    attributes:
+      label: Tags
+      description: Liste de tags séparés par un espace (ex. `rapide vegetarien`).
+      placeholder: "rapide vegetarien"
+    validations:
+      required: false
+  - type: textarea
+    id: ingredients
+    attributes:
+      label: Ingrédients
+      description: |
+        Indiquez **un ingrédient par ligne** avec le format `nom | quantité | unité`.
+        Exemple : `Oignons jaunes | 4 | gros`.
+      placeholder: |
+        Oignons jaunes | 4 | gros
+        Bouillon de boeuf | 1 | litre
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: instructions
+    attributes:
+      label: Étapes de préparation
+      description: Une ligne par étape dans l'ordre chronologique.
+      placeholder: |
+        Éplucher et émincer les oignons.
+        Faire revenir les oignons dans le beurre.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: URL de l'image
+      description: Lien complet vers une image 500x500 (hébergée sur GitHub ou autre service).
+      placeholder: "https://.../mon-image.png"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source (optionnel)
+      description: Lien vers la recette originale si disponible.
+      placeholder: "https://..."
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes complémentaires
+      description: Détails supplémentaires ou variations.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confidentialité
+      options:
+        - label: "J'accepte que ces informations soient rendues publiques sur le site et dans le dépôt de la librairie."
+          required: true
