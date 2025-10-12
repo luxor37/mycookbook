@@ -6,7 +6,12 @@ Cooking book App made with Nuxt
 
 - Internalization (nuxt/i18n Module)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Coding style for contributions
+
+ - `yarn` over `npm` at all times
+ - User the `Composition API` over the `Options API` (https://vueschool.io/articles/vuejs-tutorials/options-api-vs-composition-api/)
+ - interfaces in the `/types/` folder (with the exception of a Props interface in each component receiving Props)
+ - Always use fixed versions for all packages in the packages.json
 
 ## Setup
 
