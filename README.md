@@ -3,6 +3,7 @@
  - `yarn` over `npm` at all times
  - User the `Composition API` over the `Options API` (https://vueschool.io/articles/vuejs-tutorials/options-api-vs-composition-api/)
  - interfaces in the `/types/` folder (with the exception of a Props interface in each component receiving Props)
+ - Always use fixed versions for all packages in the packages.json
 
 ## Setup
 
