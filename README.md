@@ -1,6 +1,8 @@
-# Nuxt 3 Minimal Starter
+## Coding style for contributions
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+ -`yarn` over `npm` at all times
+ - User the `Composition API` over the `Options API` (https://vueschool.io/articles/vuejs-tutorials/options-api-vs-composition-api/)
+ - interfaces in the `/types/` folder (with the exception of a Props interface in each component receiving Props)
 
 ## Setup
 
