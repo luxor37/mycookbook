@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "mycookbook",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,23 +12,27 @@
   "engines": {
     "node": "22.17.0"
   },
+  "dependencies": {
+    "@nuxt/ui": "4.0.0",
+    "@pinia/nuxt": "0.11.2",
+    "pinia": "3.0.3"
+  },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/devtools": "2.6.5",
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "24.6.1",
     "@vite-pwa/assets-generator": "1.0.1",
     "@vite-pwa/nuxt": "1.0.4",
     "autoprefixer": "10.4.21",
-    "nuxt": "4.1.2",
+    "nuxt": "^4.1.2",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.13",
     "typescript": "5.9.2",
     "vue": "3.5.22",
     "vue-router": "4.5.1"
   },
-  "dependencies": {
-    "@nuxt/ui": "4.0.0",
-    "@pinia/nuxt": "0.11.2",
-    "pinia": "3.0.3"
+  "prettier": {
+    "semi": true,
+    "singleQuote": false
   }
 }

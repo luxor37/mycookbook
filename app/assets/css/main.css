@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+body .page-enter-active,
+body .page-leave-active {
+  transition: all 0.5s;
+}
+
+body .page-enter-from,
+body .page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}

@@ -1,4 +1,10 @@
-# Nuxt 3 Minimal Starter
+# MyCookBook
+
+Cooking book App made with Nuxt
+
+## Todo
+
+- Internalization (nuxt/i18n Module)
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
@@ -7,7 +13,7 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 Make sure to install the dependencies:
 
 ```bash
-yarn
+npm install
 ```
 
 ## Development Server
@@ -15,7 +21,7 @@ yarn
 Start the development server on `http://localhost:3000`:
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 ## Production
@@ -23,7 +29,7 @@ yarn dev
 Build the application for production:
 
 ```bash
-yarn generate
+npm run build
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

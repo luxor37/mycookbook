@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import { CATEGORY, type Ingredient } from "~/types/recipe";
-
-definePageMeta({
-  colorMode: "light",
-});
 const id = ref<string>();
 const title = ref<string>();
 const portions = ref<string>();
 const time = ref<string>();
-const type = ref<CATEGORY>();
+const type = ref<Route>();
 const image = ref<string>();
 const source = ref<string>("");
 const notes = ref<string>("");
 const imagePath = computed(() => {
-  if (image.value)
+  if (image.value) {
     return `https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/images/${image.value}`;
+  }
+
   return undefined;
 });
 
@@ -48,9 +45,13 @@ const addIngredient = () => {
   });
 };
 
-const types = computed(() => {
-  return Object.values(CATEGORY).filter((t) => t !== CATEGORY.ALL);
-});
+const types = [
+  "repas",
+  "entrees",
+  "desserts",
+  "boissons",
+  "autres",
+] satisfies Partial<Route>[];
 
 const output = computed(() => {
   return JSON.stringify(
@@ -148,7 +149,7 @@ const submitRecipe = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center">
+  <main class="flex flex-col justify-center">
     <div class="flex justify-center">
       <p class="text-center max-w-3xl">
         Ce formulaire vous permet de proposer une nouvelle recette pour
@@ -279,5 +280,5 @@ const submitRecipe = async () => {
         />
       </div>
     </div>
-  </div>
+  </main>
 </template>

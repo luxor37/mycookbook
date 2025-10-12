@@ -1,14 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { isDevelopment } from "std-env";
 
-const appTitle = "MyCookbook"
-const appDescription = "Un simple site de recettes maisons."
-const logoURL = "https://mycookb00k.netlify.app/icons/android-chrome-512x512.png"
+const appTitle = "MyCookbook";
+const appDescription = "Un simple site de recettes maisons.";
+const logoURL =
+  "https://mycookb00k.netlify.app/icons/android-chrome-512x512.png";
 
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
   app: {
+    rootTag: "body",
     head: {
       title: `${appTitle}`,
       charset: "utf-8",
@@ -21,23 +23,22 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#ffffff" },
         { name: "msapplication-TileColor", content: "#22c55e" },
 
-        { name: 'description', content: `${appDescription}` },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: "description", content: `${appDescription}` },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
 
         // Open Graph / Facebook meta tags
-        { property: 'og:type', content: 'website' },
-        { property: 'og:site_name', content: `${appTitle}` },
-        { property: 'og:title', content: `${appTitle}` },
-        { property: 'og:description', content: `${appDescription}` },
-        { property: 'og:image', content: `${logoURL}` },
-        { property: 'og:url', content: 'https://mycookb00k.netlify.app/' },
+        { property: "og:type", content: "website" },
+        { property: "og:site_name", content: `${appTitle}` },
+        { property: "og:title", content: `${appTitle}` },
+        { property: "og:description", content: `${appDescription}` },
+        { property: "og:image", content: `${logoURL}` },
+        { property: "og:url", content: "https://mycookb00k.netlify.app/" },
 
         // Twitter Card meta tags
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: `${appTitle}` },
-        { name: 'twitter:description', content: `${appDescription}` },
-        { name: 'twitter:image', content: `${logoURL}` },
-
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: `${appTitle}` },
+        { name: "twitter:description", content: `${appDescription}` },
+        { name: "twitter:image", content: `${logoURL}` },
       ],
       link: [
         {
@@ -67,19 +68,13 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
   },
 
-
-
-  modules: [
-    '@nuxt/ui',
-    '@pinia/nuxt',
-    '@vite-pwa/nuxt'
-  ],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@vite-pwa/nuxt"],
 
   colorMode: {
-    preference: 'light'
+    preference: "light",
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
 
   pwa: {
     mode: isDevelopment ? "development" : "production",
@@ -111,7 +106,7 @@ export default defineNuxtConfig({
           type: "image/png",
           label: "Home Screen on Mobile",
           platform: "mobile",
-          form_factor: "narrow"
+          form_factor: "narrow",
         },
         {
           src: "/screenshots/desktop-screenshot.png",
@@ -119,8 +114,8 @@ export default defineNuxtConfig({
           type: "image/png",
           label: "Home Screen on Desktop",
           platform: "web",
-          form_factor: "wide"
-        }
+          form_factor: "wide",
+        },
       ],
       start_url: "/",
       display: "fullscreen",
@@ -134,5 +129,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2025-10-01'
-})
+  compatibilityDate: "2025-10-01",
+});
