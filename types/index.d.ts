@@ -1,6 +1,6 @@
 export interface Recipe {
   id: string;
-  type: CATEGORY;
+  type: Route;
   title: string;
   portions: string;
   time: string;

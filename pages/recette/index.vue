@@ -25,18 +25,18 @@ if (!recipe.value) {
 
       <ul class="flex flex-row pt-2 flex-wrap gap-2">
         <li>
-          <TagWrapper>{{ recipe.portions }}</TagWrapper>
+          <Tag>{{ recipe.portions }}</Tag>
         </li>
         <li>
-          <TagWrapper>
+          <Tag>
             <ClockIcon /><span class="ml-1">{{ recipe.time }}</span>
-          </TagWrapper>
+          </Tag>
         </li>
         <template v-for="tag in recipe.tags" :key="`${tag}-${i}`">
           <li>
-            <TagWrapper class="bg-primary text-white">
+            <Tag class="bg-primary text-white">
               {{ tag }}
-            </TagWrapper>
+            </Tag>
           </li>
         </template>
       </ul>

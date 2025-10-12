@@ -49,7 +49,7 @@ const active = useRoute().path;
           ]"
           @click="isCollapsed = true"
         >
-          <NuxtLink :to="link"> {{ title }}</NuxtLink>
+          <NuxtLink :to="link">{{ title }}</NuxtLink>
         </section>
       </section>
       <section
@@ -65,9 +65,7 @@ const active = useRoute().path;
           rel="noopener"
           class="font-bold"
           @click="isCollapsed = true"
-        >
-          Ajouter une recette
-        </UButton>
+        >Ajouter une recette</UButton>
       </section>
     </section>
   </nav>

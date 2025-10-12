@@ -1,6 +1,19 @@
 import { defineStore } from "pinia";
 
 const compareByTitle = (a: Recipe, b: Recipe) => a.title.localeCompare(b.title);
+const filterByRoute = computed((): Recipe[] => {
+  const routeType = useRouteType();
+
+  if (!recipeStore.recipes) {
+    return [];
+  }
+
+  if (routeType) {
+    return recipeStore.getRecipesByType(routeType.get().value);
+  }
+
+  return recipeStore.recipes;
+});
 let isLoading = false;
 
 export const useRecipeStore = defineStore("recipe", {

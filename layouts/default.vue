@@ -13,7 +13,7 @@ onMounted(ensureRecipes);
 </script>
 
 <template>
-  <NavigationBar />
+  <NavBar />
   <main class="min-h-screen flex flex-col justify-between">
     <section class="pt-24 justify-center flex flex-col pb-12">
       <slot />
