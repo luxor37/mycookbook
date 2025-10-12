@@ -1,21 +1,21 @@
 <script setup lang="ts">
-const isCollapsed = ref(true);
+const isCollapsed = ref(true)
 const RECIPE_FORM_URL =
-  "https://github.com/luxor37/mycookbook_lib/issues/new?template=new_recipe.yml&labels=recipe-suggestion";
+  'https://github.com/luxor37/mycookbook_lib/issues/new?template=new_recipe.yml&labels=recipe-suggestion'
 
 const pages = [
-  { title: "Toutes les recettes", link: "/" },
-  { title: "Entrées", link: "/entrees" },
-  { title: "Repas", link: "/repas" },
-  { title: "Désserts", link: "/desserts" },
-  { title: "Boissons", link: "/boissons" },
-  { title: "Autres", link: "/autres" },
+  { title: 'Toutes les recettes', link: '/' },
+  { title: 'Entrées', link: '/entrees' },
+  { title: 'Repas', link: '/repas' },
+  { title: 'Désserts', link: '/desserts' },
+  { title: 'Boissons', link: '/boissons' },
+  { title: 'Autres', link: '/autres' },
 ] as const satisfies Readonly<{
-  title: string;
-  link: `/${Partial<Route> | ""}`;
-}>[];
+  title: string
+  link: `/${Partial<Type> | ''}`
+}>[]
 
-const active = useRoute().path;
+const active = useRoute().path
 </script>
 
 <template>
@@ -27,11 +27,7 @@ const active = useRoute().path;
       @click="isCollapsed = !isCollapsed"
     >
       <span class="mr-2">Menu</span>
-      <UIcon
-        :name="`${
-          isCollapsed ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'
-        }`"
-      />
+      <UIcon :name="`${isCollapsed ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'}`" />
     </section>
     <section
       :class="[
@@ -43,18 +39,13 @@ const active = useRoute().path;
         <section
           v-for="{ title, link } in pages"
           :key="link"
-          :class="[
-            'p-4 text-gray-200 font-extrabold uppercase',
-            active == link ? 'underline' : '',
-          ]"
+          :class="['p-4 text-gray-200 font-extrabold uppercase', active == link ? 'underline' : '']"
           @click="isCollapsed = true"
         >
           <NuxtLink :to="link">{{ title }}</NuxtLink>
         </section>
       </section>
-      <section
-        class="flex justify-center md:justify-start px-4 md:px-0 pb-4 md:pb-0"
-      >
+      <section class="flex justify-center md:justify-start px-4 md:px-0 pb-4 md:pb-0">
         <UButton
           icon="i-heroicons-plus"
           color="neutral"
@@ -65,7 +56,8 @@ const active = useRoute().path;
           rel="noopener"
           class="font-bold"
           @click="isCollapsed = true"
-        >Ajouter une recette</UButton>
+          >Ajouter une recette</UButton
+        >
       </section>
     </section>
   </nav>
