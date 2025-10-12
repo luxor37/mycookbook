@@ -26,7 +26,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: category
+    id: Type
     attributes:
       label: Catégorie
       options:

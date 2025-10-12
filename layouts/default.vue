@@ -1,48 +1,23 @@
 <script setup lang="ts">
-import { useRecipeStore } from "~/stores/recipes";
+definePageMeta({
+  colorMode: 'light',
+})
 
-const recipeStore = useRecipeStore();
-
+const recipeStore = useRecipeStore()
 const ensureRecipes = async () => {
-  await recipeStore.parseRecipes();
-};
+  await recipeStore.parseRecipes()
+}
 
-onServerPrefetch(ensureRecipes);
-onMounted(ensureRecipes);
+onServerPrefetch(ensureRecipes)
+onMounted(ensureRecipes)
 </script>
 
 <template>
   <NavBar />
-  <div class="min-h-screen flex flex-col justify-between">
-    <div class="pt-24 justify-center flex flex-col pb-12">
+  <main class="min-h-screen flex flex-col justify-between">
+    <section class="pt-24 justify-center flex flex-col pb-12">
       <slot />
-    </div>
-    <div class="text-white bg-primary flex flex-col items-center py-4">
-      <div>
-        ©
-        <a
-          class="underline text-white"
-          href="https://www.rmartel.dev"
-          target="_blank"
-          >Rémi Martel</a
-        >, {{ new Date().getFullYear() }}. Tous droits réservés.
-      </div>
-      <div>
-        <a
-          class="underline text-white"
-          href="https://github.com/luxor37/mycookbook"
-          target="_blank"
-          >Projet Github</a
-        >
-      </div>
-      <div>
-        <a
-          class="underline text-white"
-          href="https://github.com/luxor37/mycookbook_lib"
-          target="_blank"
-          >Librairies de recettes et d'images</a
-        >
-      </div>
-    </div>
-  </div>
+    </section>
+    <Footer />
+  </main>
 </template>

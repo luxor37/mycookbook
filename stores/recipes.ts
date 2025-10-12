@@ -1,55 +1,69 @@
-import { defineStore } from "pinia";
-import { CATEGORY, type Recipe } from "~/types/recipe"
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
 
-const compareByTitle = (a: Recipe, b: Recipe) => a.title.localeCompare(b.title);
-let fetchPromise: Promise<void> | null = null;
+export const useRecipeStore = defineStore('recipe', () => {
+  const recipes = ref<Recipe[]>([])
+  const isLoading = ref(false)
 
-export const useRecipeStore = defineStore("recipe", {
-    state: () => ({
-        recipes: null as Recipe[] | null,
-    }),
-    getters: {
-        getRecipesByType: (state) => {
-            return (type: CATEGORY): Recipe[] => {
-                if (state.recipes === null) return [] as Recipe[]
-                if (type === CATEGORY.ALL) return [...state.recipes].sort(compareByTitle)
-                const filtered = state.recipes
-                    .filter(recipe => recipe.type === type)
-                    .sort(compareByTitle)
-                return filtered
-            }
-        },
-        getRecipeById: (state) => {
-            return (id: string): Recipe | undefined => {
-                if (state.recipes === null) return undefined
-                return state.recipes.find(recipe => recipe.id === id)
-            }
-        }
-    },
-    actions: {
-        async parseRecipes() {
-            if (this.recipes !== null) return
-            if (fetchPromise) {
-                await fetchPromise
-                return
-            }
+  const compareByTitle = (a: Recipe, b: Recipe) => a.title.localeCompare(b.title)
+  const filterByType = (type: Type) => (recipe: Recipe) => recipe.type.toLowerCase() === type
+  const isEmpty = (): boolean => recipes.value.length === 0
 
-            fetchPromise = (async () => {
-                try {
-                    const response = await fetch('https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json')
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch recipes.json: ${response.status}`)
-                    }
-                    const parsedRecipes: { recipes: Recipe[] } = await response.json()
-                    this.recipes = parsedRecipes.recipes
-                } catch (error) {
-                    console.error('There has been a problem with your fetch operation:', error)
-                } finally {
-                    fetchPromise = null
-                }
-            })()
+  const getRecipesByType = (): Recipe[] => {
+    const type = useType()
 
-            await fetchPromise
-        }
-    },
-});
+    if (type.get().value === type.DEFAULT) {
+      return recipes.value.sort(compareByTitle)
+    }
+
+    return recipes.value.filter(filterByType(type.get().value)).sort(compareByTitle)
+  }
+
+  const getRecipeById = computed(() => {
+    return (id: string): Recipe | undefined => {
+      if (!recipes.value) {
+        return undefined
+      }
+
+      return recipes.value.find((recipe) => recipe.id === id)
+    }
+  })
+
+  const parseRecipes = async () => {
+    if (isLoading.value) {
+      return
+    }
+
+    try {
+      isLoading.value = true
+
+      const response = await fetch(
+        'https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json'
+      )
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch recipes.json: ${response.status}`)
+      }
+
+      const { recipes: rawRecipes } = await response.json()
+
+      recipes.value = (rawRecipes as Recipe[]).map((recipe) => ({
+        ...recipe,
+        type: recipe.type.toLowerCase() as Type,
+      }))
+    } catch (error) {
+      console.error('There has been a problem with your fetch operation:', error)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return {
+    recipes,
+    isEmpty,
+    isLoading,
+    getRecipesByType,
+    getRecipeById,
+    parseRecipes,
+  }
+})

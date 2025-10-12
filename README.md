@@ -1,3 +1,11 @@
+# MyCookBook
+
+Cooking book App made with Nuxt
+
+## Todo
+
+- Internalization (nuxt/i18n Module)
+
 ## Coding style for contributions
 
  - `yarn` over `npm` at all times
