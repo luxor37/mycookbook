@@ -24,4 +24,5 @@ logs
 !.env.example
 .vscode/
 
+# yarn only no npm
 package-lock.json
