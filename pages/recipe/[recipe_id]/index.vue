@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   colorMode: "light",
-  middleware: ["recipe"],
+  middleware: ["data"],
 });
 
 const recipeStore = useRecipeStore();
@@ -62,6 +62,7 @@ const { activeRecipe: recipe } = storeToRefs(recipeStore);
       </div>
     </div>
     <div v-else class="p-4 text-center text-gray-500">
+      {{ JSON.stringify(recipe) }}
       Recette en cours de chargement…
     </div>
   </div>

@@ -22,4 +22,7 @@ const { recipes } = storeToRefs(recipeStore);
       :image="image"
     />
   </div>
+  <div v-else class="p-4 text-center text-gray-500">
+    Catégorie en cours de chargement…
+  </div>
 </template>
