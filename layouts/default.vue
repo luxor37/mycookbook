@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import { useRecipeStore } from "~/stores/recipes";
-
-const recipeStore = useRecipeStore();
-
-const ensureRecipes = async () => {
-  await recipeStore.parseRecipes();
-};
-
-onServerPrefetch(ensureRecipes);
-onMounted(ensureRecipes);
+const year = computed<string>(() => `${new Date().getFullYear()}`);
 </script>
 
 <template>
@@ -18,30 +9,37 @@ onMounted(ensureRecipes);
       <slot />
     </div>
     <div class="text-white bg-primary flex flex-col items-center py-4">
-      <div>
-        ©
-        <a
-          class="underline text-white"
+      <div class="flex flex-row">
+        <UButton
+          variant="ghost"
+          class="text-white underline p-0"
+          label="Rémi Martel"
+          size="xl"
+          icon="i-mdi-copyright"
           href="https://www.rmartel.dev"
-          target="_blank"
-          >Rémi Martel</a
-        >, {{ new Date().getFullYear() }}. Tous droits réservés.
+          :ui="{
+            leadingIcon: 'text-white',
+          }"
+        />
+        {{ `, ${year}. Tous droits réservés.` }}
       </div>
       <div>
-        <a
-          class="underline text-white"
+        <UButton
+          variant="ghost"
+          class="text-white underline text-md"
           href="https://github.com/luxor37/mycookbook"
           target="_blank"
-          >Projet Github</a
-        >
+          label="Projet Github"
+        />
       </div>
       <div>
-        <a
-          class="underline text-white"
+        <UButton
+          variant="ghost"
+          class="text-white underline text-md"
           href="https://github.com/luxor37/mycookbook_lib"
           target="_blank"
-          >Librairies de recettes et d'images</a
-        >
+          label="Librairies de recettes et d'images"
+        />
       </div>
     </div>
   </div>

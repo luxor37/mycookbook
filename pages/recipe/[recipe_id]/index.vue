@@ -1,52 +1,28 @@
 <script setup lang="ts">
 definePageMeta({
   colorMode: "light",
+  middleware: ["data"],
 });
 
-import { useRoute } from "vue-router";
-import type { Recipe } from "~/types/recipe";
-
 const recipeStore = useRecipeStore();
-const recipe = ref<Recipe | undefined>(undefined);
-const route = useRoute();
-const recipeId = computed(() => route.query.id?.toString());
-
-watch(
-  recipeId,
-  async (newId) => {
-    if (!newId) {
-      recipe.value = undefined;
-      return;
-    }
-
-    if (recipeStore.recipes === null) {
-      await recipeStore.parseRecipes();
-    }
-
-    recipe.value = recipeStore.getRecipeById(newId);
-  },
-  { immediate: true }
-);
+const { activeRecipe: recipe } = storeToRefs(recipeStore);
 </script>
 
 <template>
-  <div v-if="recipe" class="flex flex-col items-center w-full md:w-auto">
-    <div class="p-4 md:max-w-7xl">
+  <div class="flex flex-col items-center w-full md:w-auto">
+    <div v-if="recipe" class="p-4 md:max-w-7xl">
       <div class="text-3xl text-primary font-extrabold">
         {{ recipe.title }}
       </div>
       <div class="flex flex-row pt-2 flex-wrap gap-2">
-        <Tag>{{ recipe.portions }}</Tag>
-        <Tag>
-          <Clock /><span class="ml-1">{{ recipe.time }}</span>
-        </Tag>
-        <Tag
+        <UBadge :label="`${recipe.portions} portions`" class="font-bold" />
+        <UBadge icon="i-mdi-clock" :label="recipe.time" class="font-bold" />
+        <!-- <UBadge
           v-for="(tag, i) in recipe.tags"
           :key="`${tag}-${i}`"
           class="bg-primary text-white"
-        >
-          {{ tag }}
-        </Tag>
+          :label="tag"
+        /> -->
       </div>
       <div class="flex flex-col md:flex-row mt-4">
         <div class="md:w-1/2 md:pr-2">
@@ -57,7 +33,9 @@ watch(
               :key="`${name}-${i}`"
               class="flex justify-between border-t-2"
             >
-              <div>{{ name }}</div>
+              <div class="flex flex-row">
+                <UCheckbox class="pr-2" />{{ name }}
+              </div>
               <div>{{ quantity }} {{ unit }}</div>
             </div>
           </div>
@@ -82,6 +60,10 @@ watch(
           />
         </div>
       </div>
+    </div>
+    <div v-else class="p-4 text-center text-gray-500">
+      {{ JSON.stringify(recipe) }}
+      Recette en cours de chargement…
     </div>
   </div>
 </template>
