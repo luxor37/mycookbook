@@ -11,7 +11,7 @@ const router = useRouter();
 </script>
 <template>
   <div
-    @click="router.push(`/recette?id=${id}`)"
+    @click="router.push(`/recipe/${id}`)"
     class="w-1/2 max-w-xs cursor-pointer p-2"
   >
     <div class="aspect-ratio">

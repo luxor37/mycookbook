@@ -1,6 +1,6 @@
 export interface Recipe {
     id: string
-    type: CATEGORY
+    type: Category
     title: string
     portions: string
     time: string
@@ -17,11 +17,14 @@ export interface Ingredient {
     unit: string
 }
 
-export enum CATEGORY {
-    REPAS = "REPAS",
-    ENTREES = "ENTREES",
-    DESSERTS = "DESSERTS",
-    BOISSONS = "BOISSONS",
-    AUTRES = "AUTRES",
-    ALL = "ALL"
-}
+
+export const categories = {
+    REPAS: "REPAS",
+    ENTREES: "ENTREES",
+    DESSERTS: "DESSERTS",
+    BOISSONS: "BOISSONS",
+    AUTRES: "AUTRES",
+    ALL: "ALL"
+} as const
+
+export type Category = keyof typeof categories

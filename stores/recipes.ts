@@ -1,55 +1,55 @@
-import { defineStore } from "pinia";
-import { CATEGORY, type Recipe } from "~/types/recipe"
+import { categories, type Category, type Recipe } from "~/types/recipe"
 
 const compareByTitle = (a: Recipe, b: Recipe) => a.title.localeCompare(b.title);
-let fetchPromise: Promise<void> | null = null;
 
-export const useRecipeStore = defineStore("recipe", {
-    state: () => ({
-        recipes: null as Recipe[] | null,
-    }),
-    getters: {
-        getRecipesByType: (state) => {
-            return (type: CATEGORY): Recipe[] => {
-                if (state.recipes === null) return [] as Recipe[]
-                if (type === CATEGORY.ALL) return [...state.recipes].sort(compareByTitle)
-                const filtered = state.recipes
-                    .filter(recipe => recipe.type === type)
-                    .sort(compareByTitle)
-                return filtered
+export const useRecipeStore = defineStore("recipe", () => {
+    const allRecipes = ref<Recipe[] | null>(null)
+    const activeCategory = ref<Category>(categories.ALL)
+    const activeRecipeId = ref<string | null>(null)
+
+    const recipes = computed<Recipe[]>(() => {
+        if (allRecipes.value === null) return []
+        if (activeCategory.value === categories.ALL) return [...allRecipes.value].sort(compareByTitle)
+        return allRecipes.value
+            .filter(recipe => recipe.type === activeCategory.value)
+            .sort(compareByTitle)
+    })
+
+    const activeRecipe = computed<Recipe | null>(() => {
+        if (allRecipes.value === null || activeRecipeId.value === null) return null
+        console.log(activeRecipeId.value)
+        const index = allRecipes.value.findIndex(recipe => recipe.id === activeRecipeId.value)
+        if (index === -1) return null
+        return allRecipes.value[index] || null
+    })
+
+    const getRecipeById = (id: string): Recipe | undefined => {
+        if (allRecipes.value === null) return undefined
+        return allRecipes.value.find(recipe => recipe.id === id)
+    }
+
+    const fetchRecipes = async () => {
+        if (allRecipes.value !== null) return
+
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json')
+            if (!response.ok) {
+                throw new Error(`Failed to fetch recipes.json: ${response.status}`)
             }
-        },
-        getRecipeById: (state) => {
-            return (id: string): Recipe | undefined => {
-                if (state.recipes === null) return undefined
-                return state.recipes.find(recipe => recipe.id === id)
-            }
+            const parsedRecipes: { recipes: Recipe[] } = await response.json()
+            allRecipes.value = parsedRecipes.recipes
+        } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error)
         }
-    },
-    actions: {
-        async parseRecipes() {
-            if (this.recipes !== null) return
-            if (fetchPromise) {
-                await fetchPromise
-                return
-            }
+    }
 
-            fetchPromise = (async () => {
-                try {
-                    const response = await fetch('https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json')
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch recipes.json: ${response.status}`)
-                    }
-                    const parsedRecipes: { recipes: Recipe[] } = await response.json()
-                    this.recipes = parsedRecipes.recipes
-                } catch (error) {
-                    console.error('There has been a problem with your fetch operation:', error)
-                } finally {
-                    fetchPromise = null
-                }
-            })()
-
-            await fetchPromise
-        }
-    },
+    return {
+        allRecipes,
+        activeCategory,
+        recipes,
+        activeRecipeId,
+        activeRecipe,
+        getRecipeById,
+        fetchRecipes,
+    }
 });

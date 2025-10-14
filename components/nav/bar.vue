@@ -8,9 +8,6 @@ const NAV_ITEMS = [
   { title: "Autres", link: "/autres" },
 ] as const;
 
-const RECIPE_FORM_URL =
-  "https://github.com/luxor37/mycookbook_lib/issues/new?template=new_recipe.yml&labels=recipe-suggestion";
-
 const route = useRoute();
 const navigation = computed(() => {
   const currentPath = route.path;
@@ -64,18 +61,15 @@ const isCollapsed = ref(true);
           class="flex justify-center md:justify-start px-4 md:px-0 pb-4 md:pb-0"
         >
           <UButton
-            icon="i-heroicons-plus"
+            icon="i-mdi-plus"
             color="neutral"
             variant="solid"
             size="sm"
-            :to="RECIPE_FORM_URL"
-            target="_blank"
-            rel="noopener"
+            to="/form"
             class="font-bold"
             @click="isCollapsed = true"
-          >
-            Ajouter une recette
-          </UButton>
+            label="Ajouter une recette"
+          />
         </div>
       </div>
     </div>
