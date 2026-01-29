@@ -23,7 +23,12 @@ const {
   warnings,
   normalizeIngredientFraction,
   NETLIFY_FORM_NAME,
+  imageError,
+  imageName,
+  onImageFileChange,
 } = useRecipeForm();
+
+const imageInput = ref<HTMLInputElement | null>(null);
 </script>
 
 <template>
@@ -145,14 +150,31 @@ const {
             />
           </UFormField>
 
-          <UFormField label="Image (URL)" name="image" required description="500px x 500px">
-            <UInput
-              v-model="formState.image"
-              name="image"
-              placeholder="https://..."
-              required
-              class="w-full"
+          <UFormField label="Image (500x500)" name="image" required>
+            <div
+              class="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary"
+              @dragover.prevent
+              @drop.prevent="(e) => onImageFileChange(e.dataTransfer?.files || null)"
+              @click="imageInput?.click()"
+            >
+              <p class="font-semibold">Glisser-déposer ou cliquer pour choisir</p>
+              <p class="text-xs text-gray-500 mt-1">
+                JPEG/PNG exactement 500x500
+              </p>
+              <p v-if="imageName" class="text-xs text-primary mt-2">
+                {{ imageName }}
+              </p>
+            </div>
+            <input
+              ref="imageInput"
+              type="file"
+              class="hidden"
+              accept="image/jpeg,image/png"
+              @change="(e) => onImageFileChange((e.target as HTMLInputElement)?.files)"
             />
+            <p v-if="imageError" class="text-xs text-red-600 mt-1">
+              {{ imageError }}
+            </p>
           </UFormField>
 
           <UFormField

@@ -98,6 +98,7 @@ const validatePayload = (payload) => {
   const category = (payload?.category || payload?.type || '').trim();
   const portions = (payload?.portions || '').trim();
   const time = (payload?.time || '').trim();
+  const image = (payload?.image || payload?.imageUrl || payload?.image_data || '').trim();
   const notes = (payload?.notes || '').trim();
 
   const tags = normalizeTags(payload?.tags || payload?.tagList);
@@ -105,7 +106,7 @@ const validatePayload = (payload) => {
   const instructions = normalizeInstructions(payload?.instructions || payload?.preparation);
   const id = createRecipeId(payload);
 
-  const requiredFields = { id, title, category, portions, time };
+  const requiredFields = { id, title, category, portions, time, image };
   const missingFields = Object.entries(requiredFields)
     .filter(([, value]) => !value)
     .map(([key]) => key);
@@ -135,6 +136,7 @@ const validatePayload = (payload) => {
     tags,
     ingredients,
     instructions,
+    image,
     notes,
   };
 };
@@ -232,6 +234,45 @@ const createRecipeFile = async (config, branchName, dir, recipe) => {
     body: {
       message: `Add recipe file for ${recipe.title} (${recipe.id})`,
       content: Buffer.from(JSON.stringify(recipe, null, 2) + '\n').toString('base64'),
+      branch: branchName,
+    },
+  });
+};
+
+const isDataUrl = (value = '') => /^data:image\/(jpeg|jpg);base64,/i.test(value);
+
+const fetchImageBuffer = async (imageSource) => {
+  if (isDataUrl(imageSource)) {
+    const base64 = imageSource.split(',')[1] || '';
+    const buffer = Buffer.from(base64, 'base64');
+    return { buffer, ext: 'jpg' };
+  }
+
+  const response = await fetch(imageSource);
+  if (!response.ok) {
+    const err = new Error(`Impossible de récupérer l'image (${response.status}).`);
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const contentType = (response.headers.get('content-type') || '').toLowerCase();
+  if (!contentType.includes('jpeg') && !contentType.includes('jpg')) {
+    const err = new Error("Seules les images JPEG sont acceptées pour l'instant.");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  return { buffer, ext: 'jpg' };
+};
+
+const createImageFile = async (config, branchName, dir, id, imageBuffer, ext = 'jpg') => {
+  const path = `${config.recipesRoot}/${dir}/${id}/image.${ext}`;
+  return githubRequest(config, `/repos/${config.owner}/${config.repo}/contents/${path}`, {
+    method: 'PUT',
+    body: {
+      message: `Add recipe image for ${id}`,
+      content: imageBuffer.toString('base64'),
       branch: branchName,
     },
   });
@@ -358,7 +399,10 @@ export const handler = async (event) => {
       title: repoRecipe.title,
     });
 
+    const { buffer, ext } = await fetchImageBuffer(recipe.image);
+
     await createRecipeFile(config, branchName, recipeDir, repoRecipe);
+    await createImageFile(config, branchName, recipeDir, repoRecipe.id, buffer, ext);
     await commitIndex(
       config,
       branchName,

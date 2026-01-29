@@ -44,6 +44,9 @@ export const useRecipeForm = () => {
 
   const { normalizeFractions } = useFractionNormalizer();
 
+  const imageError = ref<string | null>(null);
+  const imageName = ref<string | null>(null);
+
   const normalizeIngredientFraction = (index: number, value: string) => {
     const normalized = normalizeFractions(value);
     if (!formState.ingredients[index]) return;
@@ -108,7 +111,7 @@ export const useRecipeForm = () => {
     portions: stringField("Portions"),
     time: stringField("Temps"),
     tagsInput: string().trim(),
-    image: string().trim().url("URL d'image invalide").required("Image requise"),
+    image: string().trim().required("Image requise"),
     source: string().trim(),
     notes: string().trim(),
     ingredients: array()
@@ -142,6 +145,58 @@ export const useRecipeForm = () => {
     formState.ingredients = [defaultIngredient()];
     formState.instructions = [defaultInstruction()];
     formState.botField = "";
+    imageError.value = null;
+    imageName.value = null;
+  };
+
+  const readFileAsDataURL = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Impossible de lire le fichier"));
+      reader.readAsDataURL(file);
+    });
+
+  const validateImageDimensions = (dataUrl: string, size = 500) =>
+    new Promise<void>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width === size && img.height === size) resolve();
+        else reject(
+          new Error(
+            `L'image doit être ${size}px x ${size}px (actuel: ${img.width}x${img.height}).`,
+          ),
+        );
+      };
+      img.onerror = () => reject(new Error("Impossible de charger l'image."));
+      img.src = dataUrl;
+    });
+
+  const setImageFromFile = async (file?: File | null) => {
+    imageError.value = null;
+    imageName.value = null;
+    if (!file) return;
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      await validateImageDimensions(dataUrl, 500);
+      formState.image = dataUrl;
+      imageName.value = file.name;
+    } catch (error) {
+      imageError.value =
+        error instanceof Error
+          ? error.message
+          : "Image invalide. Assure-toi qu'elle est en 500x500.";
+      throw error;
+    }
+  };
+
+  const onImageFileChange = async (list: FileList | File[] | null | undefined) => {
+    const file = list && (list as FileList)[0] ? (list as FileList)[0] : null;
+    try {
+      await setImageFromFile(file);
+    } catch (_error) {
+      // error message already captured in imageError
+    }
   };
 
   const formatIngredient = (ingredient: Ingredient) => {
@@ -274,5 +329,9 @@ export const useRecipeForm = () => {
     warnings,
     normalizeIngredientFraction,
     NETLIFY_FORM_NAME,
+    imageError,
+    imageName,
+    onImageFileChange,
+    setImageFromFile,
   };
 };
