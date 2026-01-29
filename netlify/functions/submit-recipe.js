@@ -98,8 +98,6 @@ const validatePayload = (payload) => {
   const category = (payload?.category || payload?.type || '').trim();
   const portions = (payload?.portions || '').trim();
   const time = (payload?.time || '').trim();
-  const image = (payload?.image || '').trim();
-  const source = (payload?.source || '').trim();
   const notes = (payload?.notes || '').trim();
 
   const tags = normalizeTags(payload?.tags || payload?.tagList);
@@ -107,7 +105,7 @@ const validatePayload = (payload) => {
   const instructions = normalizeInstructions(payload?.instructions || payload?.preparation);
   const id = createRecipeId(payload);
 
-  const requiredFields = { id, title, category, portions, time, image };
+  const requiredFields = { id, title, category, portions, time };
   const missingFields = Object.entries(requiredFields)
     .filter(([, value]) => !value)
     .map(([key]) => key);
@@ -137,23 +135,18 @@ const validatePayload = (payload) => {
     tags,
     ingredients,
     instructions,
-    image,
-    source,
     notes,
   };
 };
 
 const buildRecipeForRepo = (recipe) => ({
   id: recipe.id,
-  type: recipe.category,
   title: recipe.title,
   portions: recipe.portions,
   time: recipe.time,
   tags: recipe.tags,
   ingredients: recipe.ingredients,
   preparation: recipe.instructions,
-  image: recipe.image,
-  source: recipe.source,
   notes: recipe.notes,
 });
 
@@ -168,7 +161,8 @@ const baseConfig = () => ({
   owner: process.env.GITHUB_OWNER || 'luxor37',
   repo: process.env.GITHUB_REPO || 'mycookbook_lib',
   baseBranch: process.env.GITHUB_BASE_BRANCH || 'main',
-  recipesPath: process.env.GITHUB_RECIPES_PATH || 'recipes.json',
+  recipesRoot: process.env.GITHUB_RECIPES_ROOT || 'recipes',
+  indexPath: process.env.GITHUB_RECIPES_INDEX || 'recipes/index.json',
 });
 
 const ensureGithubConfigured = (config) => {
@@ -215,35 +209,63 @@ const createBranch = async (config, baseSha, branchName) =>
     },
   });
 
-const getRecipesFile = async (config) => {
+const ensureRecipeDoesNotExist = async (config, dir, id) => {
+  const path = `${config.recipesRoot}/${dir}/${id}/index.json`;
+  try {
+    await githubRequest(
+      config,
+      `/repos/${config.owner}/${config.repo}/contents/${path}?ref=${config.baseBranch}`
+    );
+    const err = new Error(`Une recette avec l'id "${id}" existe déjà.`);
+    err.statusCode = 409;
+    throw err;
+  } catch (error) {
+    if (error?.statusCode === 404) return; // not found, ok to create
+    throw error;
+  }
+};
+
+const createRecipeFile = async (config, branchName, dir, recipe) => {
+  const path = `${config.recipesRoot}/${dir}/${recipe.id}/index.json`;
+  return githubRequest(config, `/repos/${config.owner}/${config.repo}/contents/${path}`, {
+    method: 'PUT',
+    body: {
+      message: `Add recipe file for ${recipe.title} (${recipe.id})`,
+      content: Buffer.from(JSON.stringify(recipe, null, 2) + '\n').toString('base64'),
+      branch: branchName,
+    },
+  });
+};
+
+const getIndexFile = async (config) => {
   const file = await githubRequest(
     config,
-    `/repos/${config.owner}/${config.repo}/contents/${config.recipesPath}?ref=${config.baseBranch}`
+    `/repos/${config.owner}/${config.repo}/contents/${config.indexPath}?ref=${config.baseBranch}`
   );
 
   const decoded = Buffer.from(file.content || '', 'base64').toString('utf-8');
   return { file, content: decoded };
 };
 
-const updateRecipesContent = (content, newRecipe) => {
+const updateIndexContent = (content, newEntry) => {
   let parsed;
   try {
     parsed = JSON.parse(content);
   } catch (error) {
-    const err = new Error('recipes.json est invalide (JSON non lisible).');
+    const err = new Error('recipes/index.json est invalide (JSON non lisible).');
     err.statusCode = 500;
     throw err;
   }
 
   const recipes = Array.isArray(parsed) ? parsed : Array.isArray(parsed.recipes) ? parsed.recipes : [];
 
-  if (recipes.find((item) => item.id === newRecipe.id)) {
-    const err = new Error(`Une recette avec l'id "${newRecipe.id}" existe déjà.`);
+  if (recipes.find((item) => item.id === newEntry.id)) {
+    const err = new Error(`Une recette avec l'id "${newEntry.id}" existe déjà.`);
     err.statusCode = 409;
     throw err;
   }
 
-  const updatedRecipes = [...recipes, newRecipe];
+  const updatedRecipes = [...recipes, newEntry];
 
   if (Array.isArray(parsed)) {
     return JSON.stringify(updatedRecipes, null, 2) + '\n';
@@ -252,8 +274,8 @@ const updateRecipesContent = (content, newRecipe) => {
   return JSON.stringify({ ...parsed, recipes: updatedRecipes }, null, 2) + '\n';
 };
 
-const commitRecipes = async (config, branchName, file, newContent, commitMessage) =>
-  githubRequest(config, `/repos/${config.owner}/${config.repo}/contents/${config.recipesPath}`, {
+const commitIndex = async (config, branchName, file, newContent, commitMessage) =>
+  githubRequest(config, `/repos/${config.owner}/${config.repo}/contents/${config.indexPath}`, {
     method: 'PUT',
     body: {
       message: commitMessage,
@@ -306,6 +328,18 @@ export const handler = async (event) => {
   }
 
   const repoRecipe = buildRecipeForRepo(recipe);
+  const dirByType = {
+    REPAS: 'repas',
+    ENTREES: 'entrees',
+    DESSERTS: 'desserts',
+    BOISSONS: 'boissons',
+    AUTRES: 'autres',
+  };
+  const recipeDir = dirByType[recipe.category];
+  if (!recipeDir) {
+    return respond(400, { message: `Catégorie inconnue : ${recipe.category}` });
+  }
+
   const branchName = `recipes/add-${repoRecipe.id}-${Date.now().toString(36)}`.replace(/[^a-zA-Z0-9._/-]/g, '-');
 
   try {
@@ -315,15 +349,22 @@ export const handler = async (event) => {
     }
 
     await createBranch(config, baseSha, branchName);
+    await ensureRecipeDoesNotExist(config, recipeDir, repoRecipe.id);
 
-    const { file, content } = await getRecipesFile(config);
-    const newContent = updateRecipesContent(content, repoRecipe);
-    await commitRecipes(
+    const { file, content } = await getIndexFile(config);
+    const newIndexContent = updateIndexContent(content, {
+      id: repoRecipe.id,
+      type: recipe.category,
+      title: repoRecipe.title,
+    });
+
+    await createRecipeFile(config, branchName, recipeDir, repoRecipe);
+    await commitIndex(
       config,
       branchName,
       file,
-      newContent,
-      `Add recipe ${repoRecipe.title} (${repoRecipe.id})`
+      newIndexContent,
+      `Index recipe ${repoRecipe.title} (${repoRecipe.id})`
     );
 
     const pr = await createPullRequest(
