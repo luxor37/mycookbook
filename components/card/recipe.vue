@@ -2,10 +2,16 @@
 interface Props {
   id: string;
   title: string;
-  image: string;
+  image?: string;
 }
 
 const { id, title, image } = defineProps<Props>();
+
+const fallbackImage = computed(() => `/temp.jpg`);
+
+const backgroundImage = computed(
+  () => `background-image: url(${image}), url(${fallbackImage.value});`,
+);
 
 const router = useRouter();
 </script>
@@ -17,7 +23,7 @@ const router = useRouter();
     <div class="aspect-ratio">
       <div
         class="aspect-content mt-4 rounded-lg bg-slate-500 bg-zoom"
-        :style="`background-image: url(${image});`"
+        :style="backgroundImage"
       >
         <div class="h-full w-full bg-gradient rounded-lg">
           <div

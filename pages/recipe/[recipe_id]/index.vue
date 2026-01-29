@@ -12,6 +12,8 @@ const recipe = computed(() =>
     ? recipeStore.getRecipeById(route.params.recipe_id)
     : null,
 );
+
+const fallbackImage = computed(() => `/temp.jpg`);
 </script>
 
 <template>
@@ -61,8 +63,9 @@ const recipe = computed(() =>
 
         <div class="mt-8 md:mt-0 md:w-1/2 md:pl-2 max-w-[500px]">
           <img
-            :src="recipe.image"
+            :src="recipe.image || fallbackImage"
             class="w-full rounded-lg max-w-[500px] max-h-[500px] shadow-md"
+            @error="(e) => ((e.target as HTMLImageElement).src = fallbackImage)"
           />
         </div>
       </div>
