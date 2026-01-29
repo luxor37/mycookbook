@@ -124,7 +124,8 @@ const imageInput = ref<HTMLInputElement | null>(null);
             <USelect
               v-model="formState.category"
               name="category"
-              :options="categorySelectOptions"
+              :items="categorySelectOptions"
+              value-key="value"
               placeholder="Choisir une catégorie"
               class="w-full"
             />
@@ -154,10 +155,14 @@ const imageInput = ref<HTMLInputElement | null>(null);
             <div
               class="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-primary"
               @dragover.prevent
-              @drop.prevent="(e) => onImageFileChange(e.dataTransfer?.files || null)"
+              @drop.prevent="
+                (e) => onImageFileChange(e.dataTransfer?.files || null)
+              "
               @click="imageInput?.click()"
             >
-              <p class="font-semibold">Glisser-déposer ou cliquer pour choisir</p>
+              <p class="font-semibold">
+                Glisser-déposer ou cliquer pour choisir
+              </p>
               <p class="text-xs text-gray-500 mt-1">
                 JPEG/PNG exactement 500x500
               </p>
@@ -170,7 +175,9 @@ const imageInput = ref<HTMLInputElement | null>(null);
               type="file"
               class="hidden"
               accept="image/jpeg,image/png"
-              @change="(e) => onImageFileChange((e.target as HTMLInputElement)?.files)"
+              @change="
+                (e) => onImageFileChange((e.target as HTMLInputElement)?.files)
+              "
             />
             <p v-if="imageError" class="text-xs text-red-600 mt-1">
               {{ imageError }}
@@ -193,7 +200,9 @@ const imageInput = ref<HTMLInputElement | null>(null);
           @add="addIngredient"
           @remove="removeIngredient"
           @create-unit="onCreateUnit"
-          @normalize-fraction="({ index, value }) => normalizeIngredientFraction(index, value)"
+          @normalize-fraction="
+            ({ index, value }) => normalizeIngredientFraction(index, value)
+          "
         />
 
         <USeparator label="Préparation" />
