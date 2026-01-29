@@ -26,3 +26,6 @@ logs
 
 # yarn only no npm
 package-lock.json
+
+# Local Netlify folder
+.netlify

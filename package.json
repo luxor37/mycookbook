@@ -14,22 +14,24 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "@tailwindcss/postcss": "4.1.13",
+    "@tailwindcss/postcss": "4.1.18",
     "@types/node": "24.6.1",
-    "@vite-pwa/assets-generator": "1.0.1",
-    "@vite-pwa/nuxt": "1.0.4",
-    "autoprefixer": "10.4.21",
-    "nuxt": "4.1.2",
+    "@vite-pwa/assets-generator": "1.0.2",
+    "@vite-pwa/nuxt": "1.1.0",
+    "autoprefixer": "10.4.23",
+    "nuxt": "4.3.0",
     "postcss": "8.5.6",
-    "tailwindcss": "4.1.13",
-    "typescript": "5.9.2",
-    "vue": "3.5.22",
-    "vue-router": "4.5.1"
+    "tailwindcss": "4.1.18",
+    "typescript": "5.9.3",
+    "vue": "3.5.27",
+    "vue-router": "4.6.4"
   },
   "dependencies": {
-    "@notionhq/client": "^5.1.0",
-    "@nuxt/ui": "4.0.0",
-    "@pinia/nuxt": "0.11.2",
-    "pinia": "3.0.3"
-  }
+    "@netlify/functions": "^5.1.2",
+    "@nuxt/ui": "4.4.0",
+    "@pinia/nuxt": "0.11.3",
+    "pinia": "3.0.4",
+    "yup": "^1.7.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
