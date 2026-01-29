@@ -4,6 +4,7 @@ import { categories, type Category, type Ingredient } from "~/types/recipe";
 import { useFractionNormalizer } from "~/composables/useFractionNormalizer";
 
 const NETLIFY_FORM_NAME = "recipe-submissions";
+type CategoryInput = Exclude<Category, "ALL">;
 
 const slugify = (value: string) =>
   value
@@ -23,12 +24,28 @@ const defaultInstruction = (): string => "";
 
 const allowedCategories = Object.values(categories).filter(
   (item) => item !== categories.ALL,
-);
+) as CategoryInput[];
 
 export const useRecipeForm = () => {
-  const formState = reactive({
+  const {
+    public: { netlifyFormsEnabled },
+  } = useRuntimeConfig();
+
+  const formState = reactive<{
+    title: string;
+    category: CategoryInput;
+    portions: string;
+    time: string;
+    tags: string[];
+    image: string;
+    source: string;
+    notes: string;
+    ingredients: Ingredient[];
+    instructions: string[];
+    botField: string;
+  }>({
     title: "",
-    category: categories.REPAS as Category,
+    category: categories.REPAS as CategoryInput,
     portions: "",
     time: "",
     tags: [] as string[],
@@ -135,13 +152,11 @@ export const useRecipeForm = () => {
 
   const resetForm = () => {
     formState.title = "";
-    formState.category = categories.REPAS as Category;
+    formState.category = categories.REPAS as CategoryInput;
     formState.portions = "";
     formState.time = "";
     formState.tags = [];
     formState.image = "";
-    formState.source = "";
-    formState.notes = "";
     formState.ingredients = [defaultIngredient()];
     formState.instructions = [defaultInstruction()];
     formState.botField = "";
@@ -207,6 +222,8 @@ export const useRecipeForm = () => {
   };
 
   const sendToNetlifyForms = async (payload: ReturnType<typeof buildPayload>) => {
+    if (!netlifyFormsEnabled) return;
+
     const body = new URLSearchParams({
       "form-name": NETLIFY_FORM_NAME,
       "bot-field": formState.botField,

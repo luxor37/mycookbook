@@ -13,6 +13,8 @@ export default defineNuxtConfig({
       recipeBaseUrl:
         process.env.NUXT_PUBLIC_RECIPE_BASE_URL ||
         "https://raw.githubusercontent.com/luxor37/mycookbook_lib/main",
+      netlifyFormsEnabled:
+        (process.env.NUXT_PUBLIC_NETLIFY_FORMS_ENABLED || "false") === "true",
     },
   },
   app: {
