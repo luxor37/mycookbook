@@ -8,6 +8,13 @@ const logoURL = "https://mycookb00k.netlify.app/icons/android-chrome-512x512.png
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
+  runtimeConfig: {
+    public: {
+      recipeBaseUrl:
+        process.env.NUXT_PUBLIC_RECIPE_BASE_URL ||
+        "https://raw.githubusercontent.com/luxor37/mycookbook_lib/main",
+    },
+  },
   app: {
     head: {
       title: `${appTitle}`,
@@ -134,5 +141,4 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2025-10-01'
 })

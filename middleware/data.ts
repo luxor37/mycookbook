@@ -1,8 +1,12 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to, _from) => {
     const recipeStore = useRecipeStore();
-    const { allRecipes } = storeToRefs(recipeStore);
+    const { recipeIndex } = storeToRefs(recipeStore);
 
-    if (allRecipes.value == null || allRecipes.value.length === 0) {
-        await recipeStore.fetchRecipes()
+    if (recipeIndex.value == null || recipeIndex.value.length === 0) {
+        await recipeStore.fetchRecipeIndex()
+    }
+
+    if (typeof to.params.recipe_id === 'string') {
+        await recipeStore.fetchRecipeById(to.params.recipe_id)
     }
 })

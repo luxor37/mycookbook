@@ -1,70 +1,106 @@
 import { categories, type Category, type Recipe } from "~/types/recipe"
 
-const compareByTitle = (a: Recipe, b: Recipe) => a.title.localeCompare(b.title);
+type RecipeIndexEntry = Pick<Recipe, "id" | "type" | "title">
+type RecipeCard = RecipeIndexEntry & { image: string }
+
+const config = useRuntimeConfig();
+const BASE_URL = config.public.recipeBaseUrl
+const compareByTitle = (a: { title: string }, b: { title: string }) => a.title.localeCompare(b.title);
 
 const categoryLookup: Record<string, Category> = Object.values(categories).reduce((acc, value) => {
     acc[value.toLowerCase()] = value;
     return acc;
 }, {} as Record<string, Category>);
 
+const typeToDir: Record<Category, string> = {
+    REPAS: "repas",
+    ENTREES: "entrees",
+    DESSERTS: "desserts",
+    BOISSONS: "boissons",
+    AUTRES: "autres",
+    ALL: "index",
+};
+
 export const useRecipeStore = defineStore("recipe", () => {
-    const allRecipes = ref<Recipe[] | null>(null)
-    const route = useRoute();
+    const recipeIndex = ref<RecipeIndexEntry[] | null>(null)
+    const recipeById = ref<Record<string, Recipe | undefined>>({})
 
-    const recipeIdFromRoute = computed(() => {
-        if (typeof route.params.recipe_id !== 'string') return null
-        const recipeId = route.params.recipe_id.toLowerCase()
-        return recipeId
-    });
+    const getCategoryFromSlug = (slug?: string): Category => {
+        if (!slug) return categories.ALL;
+        return categoryLookup[slug.toLowerCase()] ?? categories.ALL;
+    };
 
-    const activeRecipe = computed<Recipe | null>(() => {
-        if (!allRecipes.value || !recipeIdFromRoute.value) return null;
-        return allRecipes.value.find(
-            r => r.id.toLowerCase() === recipeIdFromRoute.value
-        ) ?? null;
-    });
+    const imageUrl = (entry: RecipeIndexEntry) =>
+        `${BASE_URL}/recipes/${typeToDir[entry.type]}/${entry.id}/image.jpg`;
 
-    const categoryFromRoute = computed<Category>(() => {
-        if (typeof route.params.category !== 'string') return categories.ALL
-        const categorySlug = route.params.category.toLowerCase()
-
-        return categoryLookup[categorySlug] ?? categories.ALL;
-    }
-    );
-
-    const recipes = computed<Recipe[]>(() => {
-        if (allRecipes.value === null) return []
-        if (categoryFromRoute.value === categories.ALL) return [...allRecipes.value].sort(compareByTitle)
-        return allRecipes.value
-            .filter(recipe => recipe.type === categoryFromRoute.value)
-            .sort(compareByTitle)
-    })
+    const getRecipesByCategory = (category?: Category | null): RecipeCard[] => {
+        if (recipeIndex.value === null) return [];
+        const target = category ?? categories.ALL;
+        const list = target === categories.ALL
+            ? recipeIndex.value
+            : recipeIndex.value.filter(r => r.type === target);
+        return [...list].sort(compareByTitle).map((entry) => ({
+            ...entry,
+            image: imageUrl(entry),
+        }));
+    };
 
     const getRecipeById = (id: string): Recipe | undefined => {
-        if (allRecipes.value === null) return undefined
-        return allRecipes.value.find(recipe => recipe.id === id)
+        return recipeById.value[id.toLowerCase()]
     }
 
-
-    const fetchRecipes = async () => {
-        if (allRecipes.value !== null) return
+    const fetchRecipeIndex = async () => {
+        if (recipeIndex.value !== null) return
 
         try {
-            const response = await fetch('https://raw.githubusercontent.com/luxor37/mycookbook_lib/main/recipes.json')
+            const response = await fetch(`${BASE_URL}/recipes/index.json`)
             if (!response.ok) {
-                throw new Error(`Failed to fetch recipes.json: ${response.status}`)
+                throw new Error(`Failed to fetch recipes index: ${response.status}`)
             }
-            const parsedRecipes: { recipes: Recipe[] } = await response.json()
-            allRecipes.value = parsedRecipes.recipes
+            const parsedRecipes: { recipes: RecipeIndexEntry[] } = await response.json()
+            recipeIndex.value = parsedRecipes.recipes
         } catch (error) {
-            console.error('There has been a problem with your fetch operation:', error)
+            console.error('Failed to fetch recipe index:', error)
+        }
+    }
+
+    const fetchRecipeById = async (id: string): Promise<Recipe | undefined> => {
+        const key = id.toLowerCase()
+        if (recipeById.value[key]) return recipeById.value[key]
+
+        if (recipeIndex.value === null) {
+            await fetchRecipeIndex()
+        }
+
+        const entry = recipeIndex.value?.find(r => r.id.toLowerCase() === key)
+        if (!entry) return undefined
+
+        const dir = typeToDir[entry.type]
+        if (!dir) return undefined
+
+        try {
+            const response = await fetch(`${BASE_URL}/recipes/${dir}/${entry.id}/index.json`)
+            if (!response.ok) {
+                throw new Error(`Failed to fetch recipe ${entry.id}: ${response.status}`)
+            }
+            const recipe: Recipe = await response.json()
+            recipe.type = entry.type
+            recipe.image = imageUrl(entry)
+            recipeById.value[key] = recipe
+            return recipe
+        } catch (error) {
+            console.error('Failed to fetch recipe:', error)
+            return undefined
         }
     }
 
     return {
-        allRecipes,
-        recipes,
-        activeRecipe,
-        fetchRecipes,
+        recipeIndex,
+        recipeById,
+        getCategoryFromSlug,
+        getRecipesByCategory,
+        fetchRecipeIndex,
+        fetchRecipeById,
+        getRecipeById,
     }
 });

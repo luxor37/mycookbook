@@ -5,8 +5,15 @@ definePageMeta({
 });
 
 const recipeStore = useRecipeStore();
+const route = useRoute();
 
-const { recipes } = storeToRefs(recipeStore);
+const category = computed(() =>
+  recipeStore.getCategoryFromSlug(
+    typeof route.params.category === "string" ? route.params.category : undefined,
+  ),
+);
+
+const recipes = computed(() => recipeStore.getRecipesByCategory(category.value));
 </script>
 
 <template>

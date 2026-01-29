@@ -5,7 +5,13 @@ definePageMeta({
 });
 
 const recipeStore = useRecipeStore();
-const { activeRecipe: recipe } = storeToRefs(recipeStore);
+const route = useRoute();
+
+const recipe = computed(() =>
+  typeof route.params.recipe_id === "string"
+    ? recipeStore.getRecipeById(route.params.recipe_id)
+    : null,
+);
 </script>
 
 <template>

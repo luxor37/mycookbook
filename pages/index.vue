@@ -4,10 +4,13 @@ definePageMeta({
   middleware: ["data"],
 });
 import { useRecipeStore } from "~/stores/recipes";
+import { categories } from "~/types/recipe";
 
 const recipeStore = useRecipeStore();
 
-const { recipes } = storeToRefs(recipeStore);
+const recipes = computed(() =>
+  recipeStore.getRecipesByCategory(categories.ALL),
+);
 </script>
 
 <template>
