@@ -128,7 +128,7 @@ export const useRecipeForm = () => {
     portions: stringField("Portions"),
     time: stringField("Temps"),
     tagsInput: string().trim(),
-    image: string().trim().required("Image requise"),
+    image: string().trim(),
     source: string().trim(),
     notes: string().trim(),
     ingredients: array()

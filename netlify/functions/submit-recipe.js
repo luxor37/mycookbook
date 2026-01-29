@@ -106,7 +106,7 @@ const validatePayload = (payload) => {
   const instructions = normalizeInstructions(payload?.instructions || payload?.preparation);
   const id = createRecipeId(payload);
 
-  const requiredFields = { id, title, category, portions, time, image };
+  const requiredFields = { id, title, category, portions, time };
   const missingFields = Object.entries(requiredFields)
     .filter(([, value]) => !value)
     .map(([key]) => key);
@@ -399,10 +399,27 @@ export const handler = async (event) => {
       title: repoRecipe.title,
     });
 
-    const { buffer, ext } = await fetchImageBuffer(recipe.image);
+    let buffer = null;
+    let ext = "jpg";
+
+    if (recipe.image) {
+      ({ buffer, ext } = await fetchImageBuffer(recipe.image));
+    }
 
     await createRecipeFile(config, branchName, recipeDir, repoRecipe);
-    await createImageFile(config, branchName, recipeDir, repoRecipe.id, buffer, ext);
+    if (buffer) {
+      await createImageFile(config, branchName, recipeDir, repoRecipe.id, buffer, ext);
+    } else {
+      // create placeholder reference to shared temp.jpg
+      await createImageFile(
+        config,
+        branchName,
+        recipeDir,
+        repoRecipe.id,
+        Buffer.from(""),
+        "jpg",
+      );
+    }
     await commitIndex(
       config,
       branchName,
