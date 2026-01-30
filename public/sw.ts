@@ -38,17 +38,27 @@ const typeToDir: Record<string, string> = {
 precacheAndRoute(self.__WB_MANIFEST as Array<ManifestEntry>)
 cleanupOutdatedCaches()
 
-// 2) Cache navigations (HTML) with NetworkFirst so previously visited pages open offline
+// 2) Cache navigations (HTML) with a custom handler:
+// - try network and cache the response
+// - if offline, fall back to cached navigation or the app shell
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({
-    cacheName: pageCache,
-    networkTimeoutSeconds: 4,
-    plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
-      new ExpirationPlugin({ maxEntries: 30 })
-    ]
-  })
+  async ({ event }) => {
+    const cache = await caches.open(pageCache)
+    try {
+      const response = await fetch(event.request)
+      if (response && response.ok) await cache.put(event.request, response.clone())
+      return response
+    } catch (err) {
+      const cached = await cache.match(event.request)
+      return (
+        cached ||
+        (await caches.match(APP_SHELL_FALLBACK)) ||
+        (await caches.match('/')) ||
+        Response.error()
+      )
+    }
+  }
 )
 
 // 3) Runtime caching for recipe JSON (index + each recipe)
@@ -101,7 +111,10 @@ const warmRecipeLibrary = async () => {
     // cache the root document so the shell is available offline after first activation
     try {
       const pageResp = await fetch('/')
-      if (pageResp.ok) await pageCacheHandle.put('/', pageResp.clone())
+      if (pageResp.ok) {
+        await pageCacheHandle.put('/', pageResp.clone())
+        await pageCacheHandle.put(APP_SHELL_FALLBACK, pageResp.clone())
+      }
     } catch (err) {
       console.warn('Unable to warm root page cache', err)
     }
@@ -147,7 +160,11 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
 setCatchHandler(async ({ event, request }: RouteHandlerCallbackOptions) => {
   const destination = request?.destination || (event as FetchEvent)?.request?.destination
   if (destination === 'document') {
-    const cached = await caches.match(request || (event as FetchEvent)?.request)
+    const navRequest = request || (event as FetchEvent)?.request
+    const cached =
+      (navRequest && await caches.match(navRequest)) ||
+      await caches.match(APP_SHELL_FALLBACK) ||
+      await caches.match('/')
     if (cached) return cached
     return new Response(
       `<!doctype html><html><head><meta charset="utf-8"><title>Offline</title></head><body><h1>Vous êtes hors ligne</h1><p>Réessayez lorsque la connexion sera rétablie.</p></body></html>`,
