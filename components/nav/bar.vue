@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const NAV_ITEMS = [
   { title: "Toutes les recettes", link: "/" },
-  { title: "Entrées", link: "/entrees" },
+  { title: "Entrées & Accompagnements", link: "/entrees" },
   { title: "Repas", link: "/repas" },
   { title: "Désserts", link: "/desserts" },
   { title: "Boissons", link: "/boissons" },
