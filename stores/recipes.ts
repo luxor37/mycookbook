@@ -31,7 +31,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     };
 
     const imageUrl = (entry: RecipeIndexEntry) =>
-        `${BASE_URL}/recipes/${typeToDir[entry.type]}/${entry.id}/image.jpg`;
+        `${BASE_URL}/recipes/${typeToDir[entry.type]}/${entry.id}/image.webp`;
 
     const getRecipesByCategory = (category?: Category | null): RecipeCard[] => {
         if (recipeIndex.value === null) return [];
