@@ -1,15 +1,19 @@
 <script setup lang="ts">
 definePageMeta({
   colorMode: "light",
-  middleware: ["data"],
 });
 
 const recipeStore = useRecipeStore();
 const route = useRoute();
+const recipeId = computed(() =>
+  typeof route.params.recipe_id === "string" ? route.params.recipe_id : undefined,
+);
+
+await useRecipeData(recipeId);
 
 const recipe = computed(() =>
-  typeof route.params.recipe_id === "string"
-    ? recipeStore.getRecipeById(route.params.recipe_id)
+  recipeId.value
+    ? recipeStore.getRecipeById(recipeId.value)
     : null,
 );
 

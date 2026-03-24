@@ -1,12 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
   colorMode: "light",
-  middleware: ["data"],
 });
 import { useRecipeStore } from "~/stores/recipes";
 import { categories } from "~/types/recipe";
 
 const recipeStore = useRecipeStore();
+await useRecipeData();
 
 const recipes = computed(() =>
   recipeStore.getRecipesByCategory(categories.ALL),

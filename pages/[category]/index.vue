@@ -1,11 +1,12 @@
 <script setup lang="ts">
 definePageMeta({
   colorMode: "light",
-  middleware: ["data"],
 });
 
 const recipeStore = useRecipeStore();
 const route = useRoute();
+
+await useRecipeData();
 
 const category = computed(() =>
   recipeStore.getCategoryFromSlug(
