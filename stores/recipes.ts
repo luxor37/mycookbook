@@ -6,6 +6,7 @@ type RecipeCard = RecipeIndexEntry & { image: string }
 const config = useRuntimeConfig();
 const BASE_URL = config.public.recipeBaseUrl
 const compareByTitle = (a: { title: string }, b: { title: string }) => a.title.localeCompare(b.title);
+const OTHER_WEB_IMAGE_EXTENSIONS = ["avif", "png", "jpg", "jpeg", "gif", "svg", "apng", "bmp", "ico"] as const;
 
 const categoryLookup: Record<string, Category> = Object.values(categories).reduce((acc, value) => {
     acc[value.toLowerCase()] = value;
@@ -32,6 +33,43 @@ export const useRecipeStore = defineStore("recipe", () => {
 
     const imageUrl = (entry: RecipeIndexEntry) =>
         `${BASE_URL}/recipes/${typeToDir[entry.type]}/${entry.id}/image.webp`;
+
+    const imageExists = async (url: string): Promise<boolean> => {
+        try {
+            const response = await fetch(url, { method: "HEAD" })
+            if (response.ok) return true
+            if (response.status === 405 || response.status === 501) {
+                const fallbackResponse = await fetch(url, {
+                    method: "GET",
+                    headers: { Range: "bytes=0-0" },
+                })
+                return fallbackResponse.ok
+            }
+            return false
+        } catch {
+            return false
+        }
+    };
+
+    const resolveImageUrl = async (dir: string, id: string): Promise<string> => {
+        const baseImageUrl = `${BASE_URL}/recipes/${dir}/${id}/image`
+        const webpUrl = `${baseImageUrl}.webp`
+
+        if (await imageExists(webpUrl)) {
+            return webpUrl
+        }
+
+        const probes = OTHER_WEB_IMAGE_EXTENSIONS.map((ext) => {
+            const url = `${baseImageUrl}.${ext}`
+            return imageExists(url).then((exists) => exists ? url : Promise.reject(url))
+        })
+
+        try {
+            return await Promise.any(probes)
+        } catch {
+            return webpUrl
+        }
+    };
 
     const getRecipesByCategory = (category?: Category | null): RecipeCard[] => {
         if (recipeIndex.value === null) return [];
@@ -79,13 +117,16 @@ export const useRecipeStore = defineStore("recipe", () => {
         if (!dir) return undefined
 
         try {
-            const response = await fetch(`${BASE_URL}/recipes/${dir}/${entry.id}/index.json`)
+            const [response, resolvedImageUrl] = await Promise.all([
+                fetch(`${BASE_URL}/recipes/${dir}/${entry.id}/index.json`),
+                resolveImageUrl(dir, entry.id),
+            ])
             if (!response.ok) {
                 throw new Error(`Failed to fetch recipe ${entry.id}: ${response.status}`)
             }
             const recipe: Recipe = await response.json()
             recipe.type = entry.type
-            recipe.image = imageUrl(entry)
+            recipe.image = resolvedImageUrl
             recipeById.value[key] = recipe
             return recipe
         } catch (error) {
