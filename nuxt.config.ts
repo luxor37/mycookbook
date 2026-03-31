@@ -6,6 +6,7 @@ const appDescription = "Un simple site de recettes maisons."
 const logoURL = "https://mycookb00k.netlify.app/icons/android-chrome-512x512.png"
 
 export default defineNuxtConfig({
+  compatibilityDate: "2026-03-31",
   ssr: false,
   devtools: { enabled: false },
   runtimeConfig: {
