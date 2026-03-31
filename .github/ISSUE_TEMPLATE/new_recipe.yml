@@ -34,7 +34,7 @@ body:
         - ENTREES
         - DESSERTS
         - BOISSONS
-        - CLEANING_PRODUCTS
+        - PRODUITS_NETTOYANTS
         - AUTRES
     validations:
       required: true
