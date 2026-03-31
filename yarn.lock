@@ -2167,6 +2167,13 @@
     "@emnapi/runtime" "^1.7.1"
     "@tybys/wasm-util" "^0.10.1"
 
+"@netlify/functions@5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@netlify/functions/-/functions-5.1.2.tgz#a18a141c989f3c5e6963d5d4c0613f106854ae0c"
+  integrity sha512-tpPiLSkQatuexH8AdAZ8RlALvT7ixOE9VhvpkzQGNvihcms8hzmvUDuSxQa7UneTj/sHsdirnXmnJ+nmf+Nx/w==
+  dependencies:
+    "@netlify/types" "2.3.0"
+
 "@netlify/functions@^2.0.2":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@netlify/functions/-/functions-2.3.0.tgz#37e2ca41c0034a10de4addbdff7fbb8ec669e8c7"
@@ -2174,13 +2181,6 @@
   dependencies:
     "@netlify/serverless-functions-api" "1.9.0"
     is-promise "^4.0.0"
-
-"@netlify/functions@^5.1.2":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@netlify/functions/-/functions-5.1.2.tgz#a18a141c989f3c5e6963d5d4c0613f106854ae0c"
-  integrity sha512-tpPiLSkQatuexH8AdAZ8RlALvT7ixOE9VhvpkzQGNvihcms8hzmvUDuSxQa7UneTj/sHsdirnXmnJ+nmf+Nx/w==
-  dependencies:
-    "@netlify/types" "2.3.0"
 
 "@netlify/node-cookies@^0.1.0":
   version "0.1.0"
@@ -12773,7 +12773,7 @@ youch@^4.1.0-beta.13:
     cookie-es "^2.0.0"
     youch-core "^0.3.3"
 
-yup@^1.7.1:
+yup@1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/yup/-/yup-1.7.1.tgz#4c47c6bb367df08d4bc597f8c4c4f5fc4277f6ab"
   integrity sha512-GKHFX2nXul2/4Dtfxhozv701jLQHdf6J34YDh2cEkpqoo8le5Mg6/LrdseVLrFarmFygZTlfIhHx/QKfb/QWXw==
