@@ -6,18 +6,18 @@ definePageMeta({
 const recipeStore = useRecipeStore();
 const route = useRoute();
 const recipeId = computed(() =>
-  typeof route.params.recipe_id === "string" ? route.params.recipe_id : undefined,
+  typeof route.params.recipe_id === "string"
+    ? route.params.recipe_id
+    : undefined,
 );
 
 await useRecipeData(recipeId);
 
 const recipe = computed(() =>
-  recipeId.value
-    ? recipeStore.getRecipeById(recipeId.value)
-    : null,
+  recipeId.value ? recipeStore.getRecipeById(recipeId.value) : null,
 );
 
-const fallbackImage = computed(() => `/temp.jpg`);
+const fallbackImage = computed(() => `/temp.webp`);
 </script>
 
 <template>

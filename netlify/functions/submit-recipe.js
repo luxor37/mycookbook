@@ -411,14 +411,14 @@ export const handler = async (event) => {
     if (buffer) {
       await createImageFile(config, branchName, recipeDir, repoRecipe.id, buffer, ext);
     } else {
-      // create placeholder reference to shared temp.jpg
+      // create placeholder reference to shared temp.webp
       await createImageFile(
         config,
         branchName,
         recipeDir,
         repoRecipe.id,
         Buffer.from(""),
-        "jpg",
+        "webp",
       );
     }
     await commitIndex(

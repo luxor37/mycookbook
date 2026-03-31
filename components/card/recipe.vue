@@ -7,7 +7,7 @@ interface Props {
 
 const { id, title, image } = defineProps<Props>();
 
-const fallbackImage = computed(() => `/temp.jpg`);
+const fallbackImage = computed(() => `/temp.webp`);
 
 const backgroundImage = computed(
   () => `background-image: url(${image}), url(${fallbackImage.value});`,

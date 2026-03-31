@@ -115,7 +115,7 @@ export default defineNuxtConfig({
       ],
       screenshots: [
         {
-          src: "/screenshots/mobile-screenshot.png",
+          src: "/screenshots/mobile-screenshot.webp",
           sizes: "1125x1951",
           type: "image/png",
           label: "Home Screen on Mobile",
@@ -123,7 +123,7 @@ export default defineNuxtConfig({
           form_factor: "narrow"
         },
         {
-          src: "/screenshots/desktop-screenshot.png",
+          src: "/screenshots/desktop-screenshot.webp",
           sizes: "2880x1524",
           type: "image/png",
           label: "Home Screen on Desktop",
