@@ -5,6 +5,7 @@ const NAV_ITEMS = [
   { title: "Repas", link: "/repas" },
   { title: "Désserts", link: "/desserts" },
   { title: "Boissons", link: "/boissons" },
+  { title: "Produits nettoyants", link: "/produits_nettoyants" },
   { title: "Autres", link: "/autres" },
 ] as const;
 

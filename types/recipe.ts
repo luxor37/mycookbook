@@ -23,6 +23,7 @@ export const categories = {
     ENTREES: "ENTREES",
     DESSERTS: "DESSERTS",
     BOISSONS: "BOISSONS",
+    CLEANING_PRODUCTS: "CLEANING_PRODUCTS",
     AUTRES: "AUTRES",
     ALL: "ALL"
 } as const

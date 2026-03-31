@@ -18,6 +18,7 @@ const typeToDir: Record<Category, string> = {
     ENTREES: "entrees",
     DESSERTS: "desserts",
     BOISSONS: "boissons",
+    CLEANING_PRODUCTS: "produits_nettoyants",
     AUTRES: "autres",
     ALL: "index",
 };
