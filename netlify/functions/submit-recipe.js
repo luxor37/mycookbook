@@ -65,8 +65,8 @@ const normalizeIngredients = (input) => {
   const asObjects = Array.isArray(input)
     ? input
     : String(input)
-        .split('\n')
-        .map((line) => ({ name: line }));
+      .split('\n')
+      .map((line) => ({ name: line }));
 
   return asObjects
     .map((item = {}) => ({
@@ -374,6 +374,7 @@ export const handler = async (event) => {
     ENTREES: 'entrees',
     DESSERTS: 'desserts',
     BOISSONS: 'boissons',
+    CLEANING_PRODUCTS: "produits_nettoyants",
     AUTRES: 'autres',
   };
   const recipeDir = dirByType[recipe.category];
